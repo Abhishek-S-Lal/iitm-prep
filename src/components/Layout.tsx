@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Sidebar, { todayDayId } from "./Sidebar";
 import { useProgress } from "../store/progressStore";
+import InstallPrompt from "./InstallPrompt";
 
 export default function Layout() {
   const { theme, toggleTheme } = useProgress();
@@ -94,6 +95,7 @@ export default function Layout() {
           <Outlet />
         </div>
       </main>
+      <InstallPrompt />
     </div>
   );
 }
