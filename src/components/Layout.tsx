@@ -3,6 +3,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import Sidebar, { todayDayId } from "./Sidebar";
 import { useProgress } from "../store/progressStore";
 import InstallPrompt from "./InstallPrompt";
+import Footer from "./Footer";
 
 export default function Layout() {
   const { theme, toggleTheme } = useProgress();
@@ -93,6 +94,7 @@ export default function Layout() {
         </header>
         <div className="flex-1 overflow-y-auto">
           <Outlet />
+          <Footer />
         </div>
       </main>
       <InstallPrompt />
