@@ -5,9 +5,11 @@ import { useProgress } from "../store/progressStore";
 import InstallPrompt from "./InstallPrompt";
 import Footer from "./Footer";
 import { useVideoOrientation } from "../hooks/useVideoOrientation";
+import { useNotifications } from "../hooks/useNotifications";
 
 export default function Layout() {
   useVideoOrientation();
+  useNotifications();
   const { theme, toggleTheme } = useProgress();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);

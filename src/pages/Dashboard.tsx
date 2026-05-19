@@ -7,6 +7,7 @@ import ProgressBar from "../components/ProgressBar";
 import Heatmap from "../components/Heatmap";
 import { todayDayId } from "../components/Sidebar";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
+import ReminderBanner from "../components/ReminderBanner";
 
 function useCountdown(target: string) {
   const [now, setNow] = useState(() => Date.now());
@@ -49,6 +50,7 @@ export default function Dashboard() {
       <h1 className="sr-only">
         IIT Madras CODE MTech AI Entrance Prep — Free 60-Day Study Plan
       </h1>
+      <ReminderBanner />
       {/* Hero countdown */}
       <div className="card overflow-hidden bg-gradient-to-br from-iitm-500 to-iitm-700 text-white">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

@@ -5,6 +5,7 @@ import DayLesson from "./pages/DayLesson";
 import SubjectView from "./pages/SubjectView";
 import MockTest from "./pages/MockTest";
 import Progress from "./pages/Progress";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/subject/:slug" element={<SubjectView />} />
           <Route path="/mock" element={<MockTest />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Dashboard />} />
         </Route>
       </Routes>
