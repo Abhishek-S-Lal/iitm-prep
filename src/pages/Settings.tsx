@@ -3,6 +3,13 @@ import { useNotificationSettings } from "../store/notificationStore";
 import { fireTestNotification } from "../hooks/useNotifications";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { useWebPush } from "../hooks/useWebPush";
+import { useSyncStore } from "../store/syncStore";
+import {
+  connect as connectCloud,
+  pullFromCloud,
+  pushToCloud,
+  disconnectCloud,
+} from "../hooks/useCloudSync";
 
 type PermState = "default" | "granted" | "denied" | "unsupported";
 
@@ -20,9 +27,66 @@ export default function Settings() {
 
   const s = useNotificationSettings();
   const push = useWebPush();
+  const sync = useSyncStore();
   const [perm, setPerm] = useState<PermState>(getPermission());
   const [feedback, setFeedback] = useState<string | null>(null);
   const [pushFeedback, setPushFeedback] = useState<string | null>(null);
+  const [emailInput, setEmailInput] = useState(sync.email ?? "");
+  const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+
+  const handleConnect = async () => {
+    const trimmed = emailInput.trim().toLowerCase();
+    if (!trimmed.includes("@") || trimmed.length < 5) {
+      setSyncFeedback("Enter a valid email.");
+      return;
+    }
+    setSyncFeedback("Connecting…");
+    const res = await connectCloud(trimmed);
+    if (!res.ok) {
+      setSyncFeedback(res.error);
+      return;
+    }
+    setSyncFeedback(
+      res.pulled
+        ? "✓ Connected. Existing progress pulled from cloud."
+        : "✓ Connected. Local progress pushed to cloud.",
+    );
+  };
+
+  const handlePushNow = async () => {
+    if (!sync.email) return;
+    setSyncFeedback("Pushing…");
+    const res = await pushToCloud(sync.email);
+    setSyncFeedback(res.ok ? "✓ Pushed." : res.error);
+  };
+
+  const handlePullNow = async () => {
+    if (!sync.email) return;
+    if (!confirm("Pull from cloud will REPLACE your local progress with the cloud copy. Continue?"))
+      return;
+    setSyncFeedback("Pulling…");
+    const res = await pullFromCloud(sync.email);
+    if (!res.ok) {
+      setSyncFeedback(res.error);
+      return;
+    }
+    setSyncFeedback(res.replaced ? "✓ Pulled." : "Cloud is empty — nothing to pull.");
+  };
+
+  const handleDisconnect = async () => {
+    if (!confirm("Disconnect this device from cloud sync? Your local data stays here.")) return;
+    await disconnectCloud(null);
+    setEmailInput("");
+    setSyncFeedback("Disconnected.");
+  };
+
+  const handleDeleteCloud = async () => {
+    if (!sync.email) return;
+    if (!confirm(`Delete cloud copy for ${sync.email}? This cannot be undone.`)) return;
+    await disconnectCloud(sync.email);
+    setEmailInput("");
+    setSyncFeedback("Cloud copy deleted. Disconnected.");
+  };
 
   useEffect(() => {
     if (push.state.status === "subscribed") {
@@ -255,6 +319,92 @@ export default function Settings() {
             <span className="text-xs text-slate-500 dark:text-slate-400">{pushFeedback}</span>
           )}
         </div>
+      </section>
+
+      <section className="card space-y-3">
+        <div>
+          <div className="font-semibold">Cross-device sync</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            Sync your progress (completed days, quiz scores, streak, mock history)
+            between phone and laptop. Stored on Netlify, free.
+          </div>
+        </div>
+
+        {!sync.email ? (
+          <div className="space-y-2">
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Your email
+              </span>
+              <input
+                type="email"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+              />
+            </label>
+            <button
+              onClick={handleConnect}
+              disabled={sync.status === "syncing"}
+              className="btn-primary text-xs"
+            >
+              {sync.status === "syncing" ? "Connecting…" : "Connect to cloud"}
+            </button>
+            <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900 dark:border-amber-700/50 dark:bg-amber-900/20 dark:text-amber-100">
+              ⚠ This is unauthenticated sync — anyone who enters your email here
+              can see and overwrite your progress. Use a private email or
+              something only you'd type.
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="rounded-lg bg-slate-50 p-3 text-xs dark:bg-slate-800">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">Account</span>
+                <span className="font-mono font-semibold">{sync.email}</span>
+              </div>
+              <div className="mt-1 flex items-center justify-between">
+                <span className="text-slate-500">Status</span>
+                <span className="font-mono font-semibold">
+                  {sync.status === "syncing"
+                    ? "Syncing…"
+                    : sync.status === "error"
+                      ? `Error: ${sync.errorMessage}`
+                      : sync.lastSyncedAt
+                        ? `Synced ${new Date(sync.lastSyncedAt).toLocaleString()}`
+                        : "Idle"}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button onClick={handlePushNow} className="btn-ghost text-xs">
+                Push now
+              </button>
+              <button onClick={handlePullNow} className="btn-ghost text-xs">
+                Pull from cloud
+              </button>
+              <button
+                onClick={handleDisconnect}
+                className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              >
+                Disconnect device
+              </button>
+              <button
+                onClick={handleDeleteCloud}
+                className="text-xs text-danger hover:underline"
+              >
+                Delete cloud copy
+              </button>
+            </div>
+          </div>
+        )}
+
+        {syncFeedback && (
+          <div className="text-xs text-slate-500 dark:text-slate-400">{syncFeedback}</div>
+        )}
       </section>
 
       <section className="card text-xs text-slate-500 dark:text-slate-400">
