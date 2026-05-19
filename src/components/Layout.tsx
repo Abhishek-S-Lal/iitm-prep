@@ -4,8 +4,10 @@ import Sidebar, { todayDayId } from "./Sidebar";
 import { useProgress } from "../store/progressStore";
 import InstallPrompt from "./InstallPrompt";
 import Footer from "./Footer";
+import { useVideoOrientation } from "../hooks/useVideoOrientation";
 
 export default function Layout() {
+  useVideoOrientation();
   const { theme, toggleTheme } = useProgress();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
