@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNotificationSettings } from "../store/notificationStore";
 import { fireTestNotification } from "../hooks/useNotifications";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
+import { useWebPush } from "../hooks/useWebPush";
 
 type PermState = "default" | "granted" | "denied" | "unsupported";
 
@@ -18,8 +19,29 @@ export default function Settings() {
   });
 
   const s = useNotificationSettings();
+  const push = useWebPush();
   const [perm, setPerm] = useState<PermState>(getPermission());
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [pushFeedback, setPushFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (push.state.status === "subscribed") {
+      push.updateSchedule();
+    }
+  }, [s.morningTime, s.eveningTime, push.state.status]);
+
+  const handleSubscribe = async () => {
+    setPushFeedback("Subscribing…");
+    const res = await push.subscribe();
+    setPushFeedback(res.ok ? "✓ Subscribed. You'll get pushes even when the app is closed." : res.error || "Failed.");
+    setPerm(getPermission());
+  };
+
+  const handleUnsubscribe = async () => {
+    setPushFeedback("Unsubscribing…");
+    const res = await push.unsubscribe();
+    setPushFeedback(res.ok ? "Unsubscribed." : res.error || "Failed.");
+  };
 
   useEffect(() => {
     setPerm(getPermission());
@@ -178,22 +200,83 @@ export default function Settings() {
         </div>
       </section>
 
+      <section className="card space-y-3">
+        <div>
+          <div className="font-semibold">Background push (works when app is closed)</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            A small server sends a push at your scheduled times every day, even if
+            the app isn't open. Install the app to your home screen first for best
+            reliability — required on iOS.
+          </div>
+        </div>
+
+        <div className="rounded-lg bg-slate-50 p-3 text-xs dark:bg-slate-800">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500">Push subscription</span>
+            <span className="font-mono font-semibold">
+              {push.state.status === "subscribed"
+                ? "Active ✓"
+                : push.state.status === "unsupported"
+                  ? "Not supported"
+                  : push.state.status === "not-configured"
+                    ? "Not configured"
+                    : push.state.status === "no-permission"
+                      ? "Permission blocked"
+                      : "Inactive"}
+            </span>
+          </div>
+          {(push.state.status === "unsupported" ||
+            push.state.status === "not-configured") && (
+            <div className="mt-1 text-slate-500">
+              {"reason" in push.state ? push.state.reason : ""}
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {push.state.status === "subscribed" ? (
+            <button onClick={handleUnsubscribe} disabled={push.busy} className="btn-ghost text-xs">
+              Disable background push
+            </button>
+          ) : (
+            <button
+              onClick={handleSubscribe}
+              disabled={
+                push.busy ||
+                push.state.status === "unsupported" ||
+                push.state.status === "not-configured"
+              }
+              className="btn-primary text-xs"
+            >
+              Enable background push
+            </button>
+          )}
+          {pushFeedback && (
+            <span className="text-xs text-slate-500 dark:text-slate-400">{pushFeedback}</span>
+          )}
+        </div>
+      </section>
+
       <section className="card text-xs text-slate-500 dark:text-slate-400">
         <div className="mb-2 font-semibold uppercase tracking-wider">How this works</div>
         <ul className="list-disc space-y-1 pl-5">
           <li>
-            Reminders fire when you open the app or PWA within the configured
-            window. They don't yet wake your phone if the app is fully closed —
-            that requires a backend with web-push (planned).
+            <strong>Background push (above)</strong> uses a scheduled function on
+            the server. After subscribing once, you'll get reminders at your
+            chosen times every day even with the app closed.
           </li>
           <li>
-            Installing the app to your home screen (Settings → Install on Android,
-            Share → Add to Home Screen on iOS) keeps the service worker warmer and
-            improves reliability.
+            <strong>Local reminders</strong> fire when you open the app within
+            your study window. They're the fallback when push isn't available
+            (e.g. browsers without web push, or before you subscribe).
           </li>
           <li>
             Each day fires at most one morning reminder and one evening reminder.
-            The evening one only fires if you haven't marked any progress that day.
+            The local evening one only fires if you haven't checked in that day.
+          </li>
+          <li>
+            iOS only delivers push to installed home-screen apps (iOS 16.4+).
+            Android Chrome works in both browser and PWA mode.
           </li>
         </ul>
       </section>

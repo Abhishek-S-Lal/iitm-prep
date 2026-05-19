@@ -8,8 +8,18 @@
   # Pin a Node version Netlify supports that matches our local toolchain.
   NODE_VERSION = "20"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # SPA fallback — every unknown path serves index.html so React Router can
 # handle deep links like /day/5 or /mock without 404ing.
+# Functions and the PWA service worker take precedence.
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/:splat"
+  status = 200
+
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
