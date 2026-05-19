@@ -1,5 +1,13 @@
 import type { Config } from "@netlify/functions";
 import { saveSubscription } from "./_lib/store.js";
+import {
+  isAllowedOrigin,
+  corsHeaders,
+  forbidden,
+  tooLarge,
+  preflight,
+  MAX_SUBSCRIBE_PAYLOAD_BYTES,
+} from "./_lib/security.js";
 
 interface SubscribeBody {
   subscription: {
@@ -11,16 +19,35 @@ interface SubscribeBody {
   timezone: string;
 }
 
+function json(req: Request, body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+  });
+}
+
+function text(req: Request, body: string, status: number): Response {
+  return new Response(body, { status, headers: corsHeaders(req) });
+}
+
 export default async (req: Request) => {
-  if (req.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 });
-  }
+  const pre = preflight(req);
+  if (pre) return pre;
+  if (!isAllowedOrigin(req)) return forbidden(req);
+
+  if (req.method !== "POST") return text(req, "Method not allowed", 405);
+
+  const contentLength = Number(req.headers.get("content-length") ?? "0");
+  if (contentLength > MAX_SUBSCRIBE_PAYLOAD_BYTES) return tooLarge(req);
+
+  const raw = await req.text();
+  if (raw.length > MAX_SUBSCRIBE_PAYLOAD_BYTES) return tooLarge(req);
 
   let body: SubscribeBody;
   try {
-    body = (await req.json()) as SubscribeBody;
+    body = JSON.parse(raw) as SubscribeBody;
   } catch {
-    return new Response("Invalid JSON", { status: 400 });
+    return text(req, "Invalid JSON", 400);
   }
 
   const { subscription, morningHour, eveningHour, timezone } = body;
@@ -30,9 +57,11 @@ export default async (req: Request) => {
     !subscription?.keys?.auth ||
     typeof morningHour !== "number" ||
     typeof eveningHour !== "number" ||
-    !timezone
+    !timezone ||
+    timezone.length > 64 ||
+    subscription.endpoint.length > 1024
   ) {
-    return new Response("Missing fields", { status: 400 });
+    return text(req, "Missing or invalid fields", 400);
   }
 
   await saveSubscription({
@@ -46,7 +75,7 @@ export default async (req: Request) => {
     lastEveningSent: null,
   });
 
-  return Response.json({ ok: true });
+  return json(req, { ok: true });
 };
 
 export const config: Config = {

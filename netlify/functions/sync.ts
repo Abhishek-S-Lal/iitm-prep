@@ -1,11 +1,19 @@
 import type { Config } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
+import {
+  isAllowedOrigin,
+  corsHeaders,
+  forbidden,
+  tooLarge,
+  preflight,
+  MAX_SYNC_PAYLOAD_BYTES,
+} from "./_lib/security.js";
 
 const STORE_NAME = "iitm-progress";
 
 function emailKey(emailRaw: string): string | null {
   const email = emailRaw.toLowerCase().trim();
-  if (!email.includes("@") || email.length > 254) return null;
+  if (!email.includes("@") || email.length > 254 || email.length < 5) return null;
   return Buffer.from(email).toString("base64url");
 }
 
@@ -23,51 +31,72 @@ interface StoredProgress {
   updatedAt: string;
 }
 
+function json(req: Request, body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+  });
+}
+
+function text(req: Request, body: string, status: number): Response {
+  return new Response(body, { status, headers: corsHeaders(req) });
+}
+
 export default async (req: Request) => {
+  const pre = preflight(req);
+  if (pre) return pre;
+
+  if (!isAllowedOrigin(req)) return forbidden(req);
+
   const store = getStore({ name: STORE_NAME, consistency: "strong" });
 
   if (req.method === "GET") {
     const url = new URL(req.url);
     const email = url.searchParams.get("email");
-    if (!email) return new Response("Missing email", { status: 400 });
+    if (!email) return text(req, "Missing email", 400);
     const key = emailKey(email);
-    if (!key) return new Response("Invalid email", { status: 400 });
-
+    if (!key) return text(req, "Invalid email", 400);
     const stored = (await store.get(key, { type: "json" })) as StoredProgress | null;
-    if (!stored) return new Response("Not found", { status: 404 });
-    return Response.json(stored);
+    if (!stored) return text(req, "Not found", 404);
+    return json(req, stored);
   }
 
   if (req.method === "POST") {
+    const contentLength = Number(req.headers.get("content-length") ?? "0");
+    if (contentLength > MAX_SYNC_PAYLOAD_BYTES) return tooLarge(req);
+
+    const raw = await req.text();
+    if (raw.length > MAX_SYNC_PAYLOAD_BYTES) return tooLarge(req);
+
     let body: { email?: string; data?: ProgressPayload };
     try {
-      body = await req.json();
+      body = JSON.parse(raw);
     } catch {
-      return new Response("Invalid JSON", { status: 400 });
+      return text(req, "Invalid JSON", 400);
     }
-    if (!body.email || !body.data) return new Response("Missing fields", { status: 400 });
+    if (!body.email || !body.data) return text(req, "Missing fields", 400);
     const key = emailKey(body.email);
-    if (!key) return new Response("Invalid email", { status: 400 });
+    if (!key) return text(req, "Invalid email", 400);
 
     const stored: StoredProgress = {
       data: body.data,
       updatedAt: new Date().toISOString(),
     };
     await store.setJSON(key, stored);
-    return Response.json({ ok: true, updatedAt: stored.updatedAt });
+    return json(req, { ok: true, updatedAt: stored.updatedAt });
   }
 
   if (req.method === "DELETE") {
     const url = new URL(req.url);
     const email = url.searchParams.get("email");
-    if (!email) return new Response("Missing email", { status: 400 });
+    if (!email) return text(req, "Missing email", 400);
     const key = emailKey(email);
-    if (!key) return new Response("Invalid email", { status: 400 });
+    if (!key) return text(req, "Invalid email", 400);
     await store.delete(key);
-    return Response.json({ ok: true });
+    return json(req, { ok: true });
   }
 
-  return new Response("Method not allowed", { status: 405 });
+  return text(req, "Method not allowed", 405);
 };
 
 export const config: Config = {
