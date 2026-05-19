@@ -6,6 +6,7 @@ import { PHASE_INFO, EXAM_DATE, type Phase } from "../data/types";
 import ProgressBar from "../components/ProgressBar";
 import Heatmap from "../components/Heatmap";
 import { todayDayId } from "../components/Sidebar";
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 function useCountdown(target: string) {
   const [now, setNow] = useState(() => Date.now());
@@ -27,6 +28,13 @@ export default function Dashboard() {
   const todayDay = dayById(today);
   const { days, hours, minutes } = useCountdown(EXAM_DATE);
 
+  useDocumentMeta({
+    title: "IIT Madras CODE MTech AI Entrance Prep — Free 60-Day Study Plan",
+    description:
+      "Free 60-day prep for the IIT Madras CODE Web-Enabled MTech in AI entrance exam. Daily NPTEL-aligned lessons, 300 practice questions, flashcards, and weighted mock tests covering Probability & Statistics, Linear Algebra, Optimization, and Machine Learning.",
+    path: "/",
+  });
+
   const completedSet = new Set(completedDays);
   const totalDone = completedDays.length;
   const allScores = Object.values(quizScores);
@@ -38,6 +46,9 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-4 lg:p-8">
+      <h1 className="sr-only">
+        IIT Madras CODE MTech AI Entrance Prep — Free 60-Day Study Plan
+      </h1>
       {/* Hero countdown */}
       <div className="card overflow-hidden bg-gradient-to-br from-iitm-500 to-iitm-700 text-white">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

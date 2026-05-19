@@ -8,6 +8,7 @@ import LessonContent from "../components/LessonContent";
 import FormulaCard from "../components/FormulaCard";
 import FlashCard from "../components/FlashCard";
 import QuizCard from "../components/QuizCard";
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 export default function DayLesson() {
   const { dayId } = useParams<{ dayId: string }>();
@@ -23,6 +24,14 @@ export default function DayLesson() {
 
   const [quizAnswers, setQuizAnswers] = useState<Record<string, boolean>>({});
   const [mode, setMode] = useState<"formulas" | "flashcards">("formulas");
+
+  useDocumentMeta({
+    title: day ? `Day ${day.id} · ${day.title}` : `Day ${id}`,
+    description: day
+      ? `${day.title} — Day ${day.id} of the 60-day IIT Madras CODE MTech AI entrance prep. ${SUBJECT_LABELS[day.subject]}: ${day.objectives.slice(0, 2).join("; ")}.`
+      : undefined,
+    path: `/day/${id}`,
+  });
 
   useEffect(() => {
     setQuizAnswers({});

@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { curriculum } from "../data/curriculum";
 import { useProgress } from "../store/progressStore";
 import { SUBJECT_LABELS, type Subject } from "../data/types";
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 export default function SubjectView() {
   const { slug } = useParams<{ slug: string }>();
@@ -9,6 +10,16 @@ export default function SubjectView() {
   const { completedDays, quizScores } = useProgress();
   const completed = new Set(completedDays);
   const days = curriculum.filter((d) => d.subject === subject);
+
+  useDocumentMeta({
+    title: SUBJECT_LABELS[subject]
+      ? `${SUBJECT_LABELS[subject]} — IITM MTech AI Prep`
+      : "Subject",
+    description: SUBJECT_LABELS[subject]
+      ? `All ${days.length} ${SUBJECT_LABELS[subject]} lessons in the 60-day IIT Madras CODE MTech AI entrance prep — daily lessons, NPTEL videos, formulas, and practice questions.`
+      : undefined,
+    path: `/subject/${slug}`,
+  });
 
   if (!days.length) {
     return (

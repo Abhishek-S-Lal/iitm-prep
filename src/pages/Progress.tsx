@@ -3,8 +3,15 @@ import { curriculum } from "../data/curriculum";
 import { PHASE_INFO, type Phase } from "../data/types";
 import Heatmap from "../components/Heatmap";
 import ProgressBar from "../components/ProgressBar";
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 export default function Progress() {
+  useDocumentMeta({
+    title: "Progress — IITM MTech AI Prep",
+    description:
+      "Track your progress through the 60-day IIT Madras CODE MTech AI entrance prep — study streak heatmap, per-phase completion, and mock test history.",
+    path: "/progress",
+  });
   const { completedDays, quizScores, mockScores, streak, resetAll } = useProgress();
   const completed = new Set(completedDays);
   const scores = Object.values(quizScores);

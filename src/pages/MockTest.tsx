@@ -8,6 +8,7 @@ import {
   type QuizQuestion,
   type Subject,
 } from "../data/types";
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 type Variant = "50" | "100" | "mini";
 
@@ -74,6 +75,12 @@ function drawWeighted(n: number, topicFilter?: Subject): QuizQuestion[] {
 }
 
 export default function MockTest() {
+  useDocumentMeta({
+    title: "Mock Tests — IITM MTech AI Prep",
+    description:
+      "Take timed mock tests for the IIT Madras CODE MTech AI entrance exam. Mini, 50-mark, and 100-mark variants drawn from 300 practice questions weighted by the actual syllabus.",
+    path: "/mock",
+  });
   const [searchParams] = useSearchParams();
   const initialMini = searchParams.get("mini") === "1";
 
