@@ -9,7 +9,7 @@ A self-paced React PWA for the IIT Madras CODE Web-Enabled MTech in AI entrance 
 ### Study content
 - **60 daily lessons** spanning Probability & Statistics, Linear Algebra, Optimization, and Basic ML
 - Primary videos from the official IITM NPTEL *Data Science for Engineers* course (Prof. Raghunathan Rengaswamy), with StatQuest / 3Blue1Brown supplements
-- **300 practice questions** tagged by subject (5 per day)
+- **330+ practice questions** tagged by subject (5+ per day; gap days have 7–9), including all 32 syllabus-relevant questions from the 2023 and 2025 IITM Zanzibar sample papers (the closest publicly available reference for IITM CODE AI exam style)
 - **Three mock-test variants** (mini, 50-mark, 100-mark) drawn weighted by the actual exam topic proportions
 - Exam-day countdown, study-streak heatmap, per-phase progress bars
 - Light (warm cream) and dark (Vercel-style) themes; mobile responsive
@@ -203,7 +203,7 @@ Things deliberately left out, in case the app grows:
 - 3Blue1Brown — *Essence of Linear Algebra* / *Bayes theorem*
 - StatQuest with Josh Starmer — statistics & ML series
 - CODE IIT Madras — Web-Enabled MTech in AI brochure ([source](https://code.iitm.ac.in/webmtech))
-- IITM Zanzibar 2023 sample paper — same four-topic AI syllabus, used for exam-style question patterns
+- IITM Zanzibar 2023 and 2025 sample papers — same four-topic AI syllabus, integrated into the daily quiz pool (questions tagged with their paper of origin in the explanation)
 
 ## Author
 
