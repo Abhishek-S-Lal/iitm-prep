@@ -61,6 +61,22 @@ const phase1: Omit<Day, "questions">[] = [
 <h3>How to use this app</h3>
 <p>Each day has a primary video (the official NPTEL lecture), optional supplements for visual intuition (StatQuest, 3Blue1Brown), formatted notes, a flashcard formula sheet and a 5-question quiz. You unlock <em>Mark Complete</em> only after attempting the quiz. Aim for 60–90 minutes per day; mocks (D50, D54, D59) require a 2-hour block.</p>
 <p><strong>If you are rusty</strong> (CS grad, did ML once long ago), start with the supplement video for visual intuition, then watch the NPTEL primary for the formal version that aligns with what the examiners teach.</p>
+<h3>Why probability for AI?</h3>
+<p>Every prediction a model makes — a class label, a forecast, a parameter estimate — is <strong>uncertain</strong>. Probability is the language in which that uncertainty is measured, communicated and reasoned about. Without it, "the model says cat" is a guess; with it, "the model assigns 0.87 probability to cat" is a calibrated belief you can act on. This is why probability is the first phase of this prep: every later topic (regression, classification, mock-test scoring) rests on it.</p>
+<h3>Statistics in two flavours: descriptive vs inferential</h3>
+<p>You will meet both:</p>
+<ul>
+  <li><strong>Descriptive statistics</strong> summarise a dataset you already have — mean, median, mode, standard deviation, variance, quartiles, histograms, box plots. They describe what is.</li>
+  <li><strong>Inferential statistics</strong> generalise from a sample to a population — confidence intervals, hypothesis tests, p-values, test statistics. They reason about what could be.</li>
+</ul>
+<p>The exam tests both. Days 8–9 build descriptive fluency; Days 10–12 build inferential fluency. A common trap on Day-1-style questions: deciding which side of the line a quantity falls on (e.g., the p-value is inferential; the median is descriptive).</p>
+<h3>A 30-second preview of bias and variance (full lesson — Day 40)</h3>
+<p>When you train a model on a sample of data, two errors compete:</p>
+<ul>
+  <li><strong>Bias</strong> — how far off the model's average prediction is from the truth (under-fitting; the model is too simple).</li>
+  <li><strong>Variance</strong> — how much the prediction shifts as you re-sample the training set (over-fitting; the model memorises noise).</li>
+</ul>
+<p>"Low bias + high variance" describes a model that fits the training data very well (low average error) but is unstable across samples — the textbook signature of <strong>over-fitting</strong>. We unpack this fully on Day 40; for Day 1 the headline is enough.</p>
 `,
     formulas: [
       F("Exam weight", "Stats 38% · LA 27% · Opt 15% · ML 20%", "Allocate study time roughly in proportion to weight."),
@@ -498,6 +514,26 @@ const phase1: Omit<Day, "questions">[] = [
 </ul>
 <h3>What a p-value <em>is</em></h3>
 <p>P(data at least as extreme as observed | H₀ true). It is NOT the probability that H₀ is true.</p>
+<h3>One-sided vs two-sided alternatives</h3>
+<p>The form of H₁ determines whether you compare to one or both tails:</p>
+<ul>
+  <li><strong>Two-sided</strong> H₁: μ ≠ μ₀ — reject if |z| &gt; z<sub>α/2</sub>. Use when "different in either direction" is the claim.</li>
+  <li><strong>One-sided (right)</strong> H₁: μ &gt; μ₀ — reject if z &gt; z<sub>α</sub>.</li>
+  <li><strong>One-sided (left)</strong> H₁: μ &lt; μ₀ — reject if z &lt; −z<sub>α</sub>.</li>
+</ul>
+<p><strong>Framing rule:</strong> the claim you want to <em>establish</em> goes in H₁; H₀ is the status quo. Example: a civil engineer wants to show average build time T &lt; 6 months. Hypotheses: H₀: T = 6 vs H₁: T &lt; 6 (left-tailed). You then gather evidence strong enough to reject H₀.</p>
+<h3>Selector: which test for which question?</h3>
+<p>Knowing <em>which</em> test to reach for is half the exam. The full selector:</p>
+<table>
+  <thead><tr><th>Test</th><th>Tests…</th><th>When to use</th><th>Statistic</th></tr></thead>
+  <tbody>
+    <tr><td><strong>z-test</strong></td><td>Mean (or two means)</td><td>Population variance σ² is <em>known</em></td><td>z = (x̄ − μ₀) / (σ/√n)</td></tr>
+    <tr><td><strong>t-test</strong></td><td>Mean (or two means)</td><td>Population variance σ² is <em>unknown</em>, sample SD s used instead; small n</td><td>t = (x̄ − μ₀) / (s/√n), df = n − 1</td></tr>
+    <tr><td><strong>χ²-test</strong></td><td>Goodness-of-fit / independence / one variance</td><td>Compare observed counts to expected, or compare a sample variance to a hypothesised value (Day 12)</td><td>χ² = Σ (O − E)² / E</td></tr>
+    <tr><td><strong>F-test</strong></td><td>Equality of two variances / ANOVA / regression overall</td><td>Ratio of two variances or two mean-square terms (Day 12)</td><td>F = s₁² / s₂²</td></tr>
+  </tbody>
+</table>
+<p>Common MSQ trap: "z-test can be used to (i) test a mean when σ known ✓, (ii) test a <em>variance</em> when σ unknown ✗ (that's χ²), (iii) compare two means with known variances ✓, (iv) compare two <em>variances</em> ✗ (that's F)."</p>
 <h3>Worked example</h3>
 <p>Claim: μ = 100. Sample x̄ = 104, σ = 15, n = 36. z = 4/(15/6) = 1.6. p ≈ 2 × 0.0548 = 0.11. At α=0.05, do not reject.</p>
 `,
@@ -506,6 +542,8 @@ const phase1: Omit<Day, "questions">[] = [
       F("t-statistic", "t = (x̄ − μ₀)/(s/√n)", "df = n−1, unknown population SD."),
       F("Type I error", "α = P(reject H₀ | H₀ true)", "Significance level."),
       F("Power", "1 − β", "P(reject H₀ | H₁ true)."),
+      F("One-sided reject", "z > z_α  or  z < −z_α", "Use when H₁ is directional (e.g. μ < μ₀)."),
+      F("Test selector", "z mean (σ known) · t mean (σ unknown) · χ² counts/variance · F variance-ratio", "First decide what you're testing, then pick the family."),
     ],
     summary: "Test statistic = (estimate − null) / SE. Compare to a critical value; small p ⇒ reject H₀.",
   },
@@ -706,6 +744,32 @@ const phase2: Omit<Day, "questions">[] = [
 <p>If T₁(x) = Ax and T₂(y) = By, then (T₂ ∘ T₁)(x) = B(Ax) = (BA)x.</p>
 <h3>Why translation is NOT linear</h3>
 <p>T(x) = x + b takes 0 to b ≠ 0, breaking linearity. Combine with linear maps via <em>affine</em> transformations: x ↦ Ax + b.</p>
+<h3>Matrix algebra rules you will lean on (preview of Day 17)</h3>
+<p>For any real square matrices X and Y of the same size and α ∈ ℝ:</p>
+<ul>
+  <li><strong>Addition is commutative:</strong> X + Y = Y + X</li>
+  <li><strong>Multiplication is NOT:</strong> XY ≠ YX in general</li>
+  <li><strong>Scalar distributes over sums:</strong> α(X + Y) = αX + αY</li>
+  <li><strong>Transpose</strong> (Xᵀ) swaps rows and columns. Properties: (Xᵀ)ᵀ = X, (X + Y)ᵀ = Xᵀ + Yᵀ, (XY)ᵀ = YᵀXᵀ (reverse order), (αX)ᵀ = αXᵀ</li>
+</ul>
+<p>Memorise: Xᵀ = X is a strictly stronger property than "X is a matrix" — it defines <em>symmetry</em>, covered next.</p>
+<h3>Symmetric, skew-symmetric, and the decomposition every matrix admits</h3>
+<p>A square matrix A is</p>
+<ul>
+  <li><strong>symmetric</strong> if Aᵀ = A — e.g. covariance matrices, real Laplacians;</li>
+  <li><strong>skew-symmetric</strong> if Aᵀ = −A — e.g. 2D rotation generator [[0,−1],[1,0]] is skew-symmetric (and orthogonal).</li>
+</ul>
+<p>Every square matrix decomposes uniquely as the sum of its symmetric and skew-symmetric parts:</p>
+<div class="formula-block">A = ½(A + Aᵀ) + ½(A − Aᵀ),  where the first term is symmetric and the second is skew-symmetric</div>
+<p><strong>Why this matters for the exam (IITMZ 2025 Q4):</strong> if a linear map T sends every symmetric matrix to 0 AND every skew-symmetric matrix to 0, then T sends <em>every</em> A to 0 (because A is a sum of those two pieces). So rank(T) = 0. Without the decomposition fact, the question looks unsolvable.</p>
+<h3>Spaces of structured matrices and their dimensions</h3>
+<p>Inside M<sub>n</sub>(ℝ) (dimension n²):</p>
+<ul>
+  <li>Symmetric n × n matrices form a subspace of dimension <strong>n(n+1)/2</strong> (the diagonal plus the upper triangle).</li>
+  <li>Skew-symmetric n × n matrices form a subspace of dimension <strong>n(n−1)/2</strong> (the strictly upper triangle; diagonal is forced to 0 since A<sub>ii</sub> = −A<sub>ii</sub>).</li>
+  <li>The sum gives n(n+1)/2 + n(n−1)/2 = n² = dim M<sub>n</sub>(ℝ). The subspaces intersect only at 0, confirming the direct-sum decomposition above.</li>
+  <li><strong>Trace-0 symmetric 2 × 2 matrices</strong>: symmetric gives dim 3 [[a,b],[b,c]]; trace 0 forces c = −a, leaving 2 free parameters ⇒ dim 2.</li>
+</ul>
 <h3>Worked example</h3>
 <p>Rotate 90° about origin then reflect across y = x. R₉₀ = [[0,−1],[1,0]]; reflection [[0,1],[1,0]]. Product = [[1,0],[0,−1]] — a reflection across x-axis.</p>
 `,
@@ -713,8 +777,14 @@ const phase2: Omit<Day, "questions">[] = [
       F("Linearity", "T(au + bv) = a T(u) + b T(v)", "Defining property of linear maps."),
       F("Rotation 2D", "[[cosθ, −sinθ],[sinθ, cosθ]]", "Counter-clockwise by θ."),
       F("Composition", "(T₂ ∘ T₁)(x) = (BA)x", "Matrix multiplication encodes composition."),
+      F("Transpose", "Xᵀ swaps rows ↔ columns", "(XY)ᵀ = YᵀXᵀ, reverse order."),
+      F("Symmetric", "Aᵀ = A", "Equivalent to A_{ij} = A_{ji}."),
+      F("Skew-symmetric", "Aᵀ = −A", "Forces zero diagonal; 2D example: [[0,−1],[1,0]]."),
+      F("Sym + Skew decomposition", "A = ½(A+Aᵀ) + ½(A−Aᵀ)", "Unique split; underlies many MSQ traps."),
+      F("dim symmetric n×n", "n(n+1)/2", "Free params: diagonal + upper triangle."),
+      F("dim skew-symmetric n×n", "n(n−1)/2", "Strict upper triangle only; diagonal forced 0."),
     ],
-    summary: "Linear maps preserve addition and scaling. Matrices are their basis-dependent fingerprints.",
+    summary: "Linear maps preserve addition and scaling; matrices are their basis-dependent fingerprints. Every square matrix splits as symmetric + skew-symmetric — a fact the exam loves to lean on.",
   },
   {
     id: 17, date: dateForDay(17), phase: 2, subject: "linear-algebra",
@@ -784,14 +854,29 @@ const phase2: Omit<Day, "questions">[] = [
 <p>x + 2y = 5, 3x − y = 1.</p>
 <p>Row 2 − 3 · Row 1 ⇒ −7y = −14 ⇒ y = 2. Back-substitute: x = 5 − 4 = 1.</p>
 <h3>Geometric picture</h3>
-<p>Each linear equation is a hyperplane. Solutions are intersections — a point (unique), a line / plane (infinite), or empty (inconsistent).</p>
+<p>Each linear equation is a hyperplane. Solutions are intersections — a point (unique), a line / plane (infinite), or empty (inconsistent). In 2D the picture simplifies:</p>
+<ul>
+  <li><strong>Coincident lines</strong> (same equation, possibly scaled): infinitely many solutions.</li>
+  <li><strong>Parallel lines</strong> (same slope, different intercept): no solution.</li>
+  <li><strong>Intersecting lines</strong> (different slopes): exactly one solution.</li>
+</ul>
+<h3>Homogeneous systems: Ax = 0</h3>
+<p>A system with right-hand side 0 is called <strong>homogeneous</strong>. Three facts you must internalise:</p>
+<ul>
+  <li>It <em>always</em> has the trivial solution x = 0 — so it is never inconsistent.</li>
+  <li>For an m × n matrix A, when <strong>m &lt; n</strong> (fewer equations than unknowns), the row-reduced form must have at least one free variable ⇒ <em>infinitely many</em> solutions.</li>
+  <li>When m ≥ n, uniqueness of x = 0 depends on rank: unique iff rank(A) = n; otherwise infinitely many.</li>
+</ul>
+<p><strong>Common MSQ trap (IITMZ 2025 Q16):</strong> "If m &gt; n, no solution" is FALSE for homogeneous systems (x = 0 always works). "m = n ⇒ unique" is FALSE unless A has full rank.</p>
 `,
     formulas: [
       F("Rouché–Capelli", "Consistent ⇔ rank(A) = rank([A|b])", "Existence test."),
       F("Unique solution", "rank = n", "When the number of pivots equals the number of unknowns."),
       F("Elementary ops", "swap · scale · add", "Preserve solution set."),
+      F("Homogeneous", "Ax = 0", "Always has x = 0 as a (trivial) solution; nullity > 0 ⇒ infinitely many."),
+      F("m < n homogeneous", "always infinitely many solutions", "More unknowns than equations ⇒ free variables."),
     ],
-    summary: "Gauss-eliminate to REF; classify by ranks; back-substitute. Three cases: none, one, infinitely many.",
+    summary: "Gauss-eliminate to REF; classify by ranks; back-substitute. Three cases: none, one, infinitely many. Homogeneous systems Ax = 0 are never inconsistent.",
   },
   {
     id: 19, date: dateForDay(19), phase: 2, subject: "linear-algebra",
@@ -1026,16 +1111,29 @@ const phase2: Omit<Day, "questions">[] = [
 <h3>Important properties</h3>
 <ul>
   <li>Real symmetric matrices have real eigenvalues and orthogonal eigenvectors</li>
-  <li>If λ is an eigenvalue of A, then λᵏ is an eigenvalue of Aᵏ</li>
+  <li>If λ is an eigenvalue of A, then λᵏ is an eigenvalue of Aᵏ; 1/λ is an eigenvalue of A⁻¹ (when A is invertible); and (1/λ − λ) is an eigenvalue of A⁻¹ − A</li>
   <li>A and Aᵀ share the same eigenvalues</li>
 </ul>
+<h3>Complex eigenvalues of real matrices (rotation pattern)</h3>
+<p>A real matrix can have complex eigenvalues — they always come in conjugate pairs (a ± bi). The canonical example is the 2D rotation by 90°:</p>
+<div class="formula-block">R = [[0, −1],[1, 0]]  ⇒  characteristic poly λ² + 1 = 0  ⇒  λ = ±i</div>
+<p>That matrix R is simultaneously <strong>orthogonal</strong> (RᵀR = I, det R = 1), <strong>skew-symmetric</strong> (Rᵀ = −R), and <strong>invertible</strong> (det = 1 ≠ 0). It is <em>not</em> symmetric — a real symmetric matrix is forced to have real eigenvalues, so seeing eigenvalues i, −i rules symmetry out (IITMZ 2025 Q15).</p>
+<h3>Involutory matrices: P² = I</h3>
+<p>A matrix that is its own inverse (P² = I) is called <em>involutory</em>. Its eigenvalues satisfy λ² = 1 ⇒ λ = ±1. Reflections about any line through the origin are involutory:</p>
+<div class="formula-block">P_θ = [[cos 2θ, sin 2θ],[sin 2θ, −cos 2θ]]  satisfies  P_θ² = I  for every θ ∈ [0, π)</div>
+<p>Distinct θ give distinct matrices, so there are <strong>infinitely many</strong> real 2 × 2 involutory matrices (IITMZ 2025 Q21).</p>
+<h3>Structured / block patterns</h3>
+<p>For an anti-diagonal block matrix X = [[0, αI],[αI, 0]], compute X² block-wise: X² = [[α²I, 0],[0, α²I]] = α²I. So X²v = α²v for every v ⇒ eigenvalues of X satisfy λ² = α² ⇒ λ = ±α (each with multiplicity matching the block size). This is the structure behind IITMZ 2025 Q5 (eigenvalues ±2 of a 4×4 with 2I on the anti-diagonal).</p>
 `,
     formulas: [
       F("Eigen equation", "A v = λ v", "v is an eigenvector with eigenvalue λ."),
       F("Characteristic polynomial", "det(A − λI) = 0", "Roots = eigenvalues."),
       F("Sum and product", "Σλ = tr A,  Πλ = det A", "Fast sanity checks."),
+      F("Eigenvalues of A⁻¹", "1/λ", "Reciprocate non-zero eigenvalues of A."),
+      F("Conjugate pairs", "real A ⇒ complex λ come as a ± bi", "Rotation R_{90°} has λ = ±i."),
+      F("Involutory", "P² = I ⇒ λ ∈ {+1, −1}", "Reflections give a continuous family."),
     ],
-    summary: "Eigenpairs reveal a matrix's preferred axes. For symmetric A, eigenvectors are orthogonal.",
+    summary: "Eigenpairs reveal a matrix's preferred axes. Symmetric ⇒ real, orthogonal eigenvectors. Real eigenvalues i, −i ⇒ rotation-like, skew-symmetric. Involutory matrices have λ = ±1 — infinitely many in 2D.",
   },
   {
     id: 24, date: dateForDay(24), phase: 2, subject: "linear-algebra",
@@ -1133,6 +1231,13 @@ const phase2: Omit<Day, "questions">[] = [
 <h3>Cosine similarity</h3>
 <div class="formula-block">cos θ = u · v / (||u|| ||v||) ∈ [−1, 1]</div>
 <p>Measures direction, ignoring magnitude. Common in text/embedding similarity.</p>
+<p><strong>Interpretation by value:</strong></p>
+<ul>
+  <li>cos θ = 1 ⇒ same direction (u and v are positive scalar multiples).</li>
+  <li>cos θ = 0 ⇒ vectors are <strong>orthogonal</strong> (perpendicular) — u · v = 0. Day 22 introduced this.</li>
+  <li>cos θ = −1 ⇒ opposite directions.</li>
+</ul>
+<p><strong>Quick check:</strong> cosine similarity of (1, 0) and (0, 1) is 0 ⇒ the standard basis vectors are orthogonal.</p>
 <h3>Mahalanobis distance</h3>
 <div class="formula-block">d_M(u, v) = √((u − v)ᵀ Σ^{-1} (u − v))</div>
 <p>Standardises by the covariance Σ — invariant under linear coordinate changes. Reduces to Euclidean when Σ = I.</p>
@@ -1451,11 +1556,20 @@ const phase3: Omit<Day, "questions">[] = [
   <li>Sketch a 2D contour if you can — it makes saddle vs minimum obvious</li>
   <li>For GD, after each step recompute the gradient at the new point, not the old one</li>
 </ul>
+<h3>Optimisation meets ML: regularisation (preview of Days 38, 41, 42)</h3>
+<p>Several ML problem sets reuse the optimisation language to introduce <strong>regularisation</strong>: adding a penalty term to the loss to discourage large weights.</p>
+<ul>
+  <li><strong>L2 / Ridge regularisation</strong> — loss + λ · ‖w‖²₂. The added quadratic is convex; adding it to a convex loss leaves the problem convex with a <em>unique</em> minimum. Day 38 (multiple linear regression) derives ridge as the closed-form (XᵀX + λI)⁻¹ Xᵀy.</li>
+  <li><strong>L1 / Lasso regularisation</strong> — loss + λ · ‖w‖₁. Convex but non-smooth, so the optimum often sits on a vertex of the L1 ball → many weights become exactly zero (feature selection).</li>
+</ul>
+<p>For Day-34 questions: adding L2 to a convex loss <em>keeps the problem convex</em> — and strictly convex if λ &gt; 0, so the minimiser is unique.</p>
 `,
     formulas: [
       F("Phase 3 checklist", "∇f = 0 · H positive definite · Lagrange L = f + λg", "These three carry every question."),
+      F("L2-regularised loss", "L(w) + λ‖w‖²₂", "Convex + strictly convex penalty ⇒ unique minimum (Days 38, 41)."),
+      F("L1-regularised loss", "L(w) + λ‖w‖₁", "Convex but non-smooth ⇒ sparse solutions (Lasso)."),
     ],
-    summary: "Optimisation has narrow toolkit, broad applicability. Drill the same five moves until they feel automatic.",
+    summary: "Optimisation has narrow toolkit, broad applicability. Drill the same five moves until they feel automatic. Regularisation simply adds a convex penalty — covered in depth on Days 38 / 41 / 42.",
   },
   {
     id: 35, date: dateForDay(35), phase: 3, subject: "optimization",
@@ -1511,10 +1625,11 @@ const phase4: Omit<Day, "questions">[] = [
 <p>Machine learning fits a function f̂ to data so that future predictions on unseen inputs are close to true outputs.</p>
 <h3>Three paradigms</h3>
 <ul>
-  <li><strong>Supervised:</strong> labelled (x, y); learn x → y. Classification (discrete y) or regression (continuous y).</li>
-  <li><strong>Unsupervised:</strong> no labels; discover structure (clusters, latent variables, density).</li>
-  <li><strong>Reinforcement:</strong> agent interacts with environment, maximises reward over time.</li>
+  <li><strong>Supervised:</strong> labelled (x, y); learn x → y. Classification (discrete y) or regression (continuous y). Examples: <em>linear regression, logistic regression, k-nearest neighbours, decision trees, support vector machines</em>.</li>
+  <li><strong>Unsupervised:</strong> no labels; discover structure (clusters, latent variables, density). Examples: <em>k-means clustering, hierarchical clustering, PCA, Gaussian mixture models</em>.</li>
+  <li><strong>Reinforcement:</strong> agent interacts with environment, maximises reward over time. Examples: <em>Q-learning, policy gradient</em>.</li>
 </ul>
+<p><strong>Exam-style recognition:</strong> if you see a question asking "which of these is unsupervised?", the algorithm to recognise is one that needs only x (no labels) — typically <em>k-means</em>, PCA, hierarchical clustering. Logistic regression and kNN are supervised because they require y.</p>
 <h3>The data split</h3>
 <ul>
   <li><strong>Training set</strong> — fit parameters</li>
