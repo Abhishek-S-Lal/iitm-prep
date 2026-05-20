@@ -343,6 +343,8 @@ const phase1: Omit<Day, "questions">[] = [
     videos: [
       V("Tg5V-11YIqc", "Sample Statistics", "NPTEL · IIT Madras", "33:54"),
       V("mk8tOD0t8M0", "Mode, Median, Mean, Range, and Standard Deviation", "Simple Learning Pro", "9:48", "supplement"),
+      V("qBigTkBLU6g", "Histograms, Clearly Explained", "StatQuest with Josh Starmer", "3:25", "supplement"),
+      V("fHLhBnmwUM0", "Boxplots are Awesome!!!", "StatQuest with Josh Starmer", "5:22", "supplement"),
     ],
     notes: `
 <h2>Centre and spread</h2>
@@ -354,6 +356,17 @@ const phase1: Omit<Day, "questions">[] = [
 <p>Q1 = 25th percentile, Q2 = median, Q3 = 75th percentile. IQR = Q3 − Q1 captures the middle 50% of the data.</p>
 <h3>Box plot whiskers</h3>
 <p>Standard whiskers extend to min/max within Q1 − 1.5·IQR and Q3 + 1.5·IQR; points outside are flagged as outliers.</p>
+<div class="formula-block">Lower fence = Q1 − 1.5·IQR;  Upper fence = Q3 + 1.5·IQR</div>
+<p>Worked: data 2, 4, 5, 5, 6, 6, 7, 8, 9, 20. Q1 = 5, Q3 = 8, IQR = 3. Fences = 5 − 4.5 = 0.5 and 8 + 4.5 = 12.5. Value 20 lies above the upper fence ⇒ outlier.</p>
+<h3>Reading graphical descriptive plots</h3>
+<ul>
+  <li><strong>Histogram</strong> — bar heights = frequency in each bin. Long right tail ⇒ right-skewed (mean > median). Long left tail ⇒ left-skewed (mean &lt; median). Two peaks ⇒ bimodal (possibly a mix of two populations).</li>
+  <li><strong>Box plot</strong> — box = IQR, line inside = median, whiskers = non-outlier extremes, dots = outliers. Median off-centre inside the box flags skew. Compare distributions across groups by stacking boxplots.</li>
+  <li><strong>Scatter plot</strong> — used for bivariate data. Tight band along a line ⇒ strong linear correlation. Curved cloud ⇒ non-linear association. Random cloud ⇒ no relationship.</li>
+  <li><strong>Pareto / bar chart</strong> — categorical frequencies sorted descending. Top few bars often dominate; useful for prioritisation.</li>
+</ul>
+<h3>Skewness ordering (worth memorising)</h3>
+<p>Right-skewed: <strong>mode &lt; median &lt; mean</strong>. Left-skewed: <strong>mean &lt; median &lt; mode</strong>. Symmetric: all three coincide.</p>
 <h3>Effect of transformations</h3>
 <ul>
   <li>Adding c shifts mean by c, variance unchanged</li>
@@ -370,6 +383,8 @@ const phase1: Omit<Day, "questions">[] = [
       F("Sample mean", "x̄ = (1/n) Σ xᵢ", "Arithmetic mean."),
       F("Sample variance", "s² = (1/(n−1)) Σ (xᵢ − x̄)²", "Unbiased estimator of σ²."),
       F("IQR", "Q3 − Q1", "Middle-50% spread."),
+      F("Outlier fences", "[Q1 − 1.5·IQR,  Q3 + 1.5·IQR]", "Values outside are box-plot outliers."),
+      F("Skewness order", "right-skew: mode < median < mean", "Mirror for left skew."),
       F("Scaling", "Var(aX + b) = a² Var(X)", "Shifts do not affect variance."),
       F("Recursive mean", "x̄_{n+1} = (n x̄_n + x_{n+1}) / (n + 1)", "Update a running mean — sample-paper Q14."),
     ],
@@ -505,6 +520,7 @@ const phase1: Omit<Day, "questions">[] = [
     videos: [
       V("7_cs1YlZoug", "Chi-Square Tests: Crash Course Statistics #29", "CrashCourse", "13:01"),
       V("R7xd624pR1A", "Using Linear Models for t tests and ANOVA, Clearly Explained", "StatQuest with Josh Starmer", "10:05", "supplement"),
+      V("7GJkxSYsX70", "Hypothesis Tests for Equality of Two Variances", "jbstatistics", "8:14", "supplement"),
     ],
     notes: `
 <h2>Chi-square statistic</h2>
@@ -516,21 +532,27 @@ const phase1: Omit<Day, "questions">[] = [
 <h3>Rule of thumb</h3>
 <p>Each expected count should be ≥ 5 for the chi-square approximation to be reliable.</p>
 <h3>F-test</h3>
-<p>The F-statistic is a ratio of two scaled chi-square variables (sample variances divided by their df). Used for:</p>
+<p>The F-statistic is a ratio of two scaled chi-square variables (sample variances divided by their df). Three exam-relevant uses:</p>
 <ul>
-  <li>Testing equality of two variances</li>
-  <li>One-way ANOVA: between-group MS / within-group MS</li>
-  <li>Overall significance test in regression</li>
+  <li><strong>Two-sample test of equal variances</strong> — see formula below</li>
+  <li><strong>One-way ANOVA</strong> — between-group MS / within-group MS</li>
+  <li><strong>Overall significance test in regression</strong></li>
 </ul>
-<h3>Worked example</h3>
-<p>3×4 contingency table: df = 2 × 3 = 6. With χ² = 14.07 and df = 6, p ≈ 0.029 → reject independence at α=0.05.</p>
+<h3>Two-sample F-test for variance equality</h3>
+<p>To test H₀: σ₁² = σ₂² vs H₁: σ₁² ≠ σ₂² (e.g. before pooling samples or before a t-test that assumes equal variances), put the <em>larger</em> sample variance on top:</p>
+<div class="formula-block">F = s₁² / s₂²  with df = (n₁ − 1, n₂ − 1)</div>
+<p>Reject H₀ if F &gt; F_{α/2, n₁−1, n₂−1} (or below the lower critical value).</p>
+<h3>Worked examples</h3>
+<p><strong>Chi-square independence:</strong> 3×4 contingency table → df = 2 × 3 = 6. With χ² = 14.07 and df = 6, p ≈ 0.029 → reject independence at α=0.05.</p>
+<p><strong>F-test for variances:</strong> Sample 1: n₁=11, s₁²=24. Sample 2: n₂=16, s₂²=8. F = 24/8 = 3. Critical F_{0.025, 10, 15} ≈ 3.06. Since 3 &lt; 3.06, do <strong>not</strong> reject equal variances at α=0.05.</p>
 `,
     formulas: [
       F("Chi-square", "χ² = Σ (O−E)²/E", "Goodness of fit and independence."),
       F("df (independence)", "(r−1)(c−1)", "Degrees of freedom for r×c table."),
-      F("F-statistic", "F = (s₁²/σ₁²) / (s₂²/σ₂²)", "Ratio of scaled chi-squares."),
+      F("F-statistic (general)", "F = (s₁²/σ₁²) / (s₂²/σ₂²)", "Ratio of scaled chi-squares."),
+      F("F-test for variances", "F = s₁² / s₂²,  df = (n₁−1, n₂−1)", "Larger variance on top; check homoscedasticity."),
     ],
-    summary: "Chi-square sums squared standardised residuals across cells. F-tests compare variances or model groups via variance ratios.",
+    summary: "Chi-square sums squared standardised residuals across cells. F-tests compare variances or model groups via variance ratios. For variance equality, F = larger s²/smaller s² with df pair (n₁−1, n₂−1).",
   },
   {
     id: 13, date: dateForDay(13), phase: 1, subject: "probability",
@@ -778,9 +800,11 @@ const phase2: Omit<Day, "questions">[] = [
       "Define the four fundamental subspaces",
       "Apply the rank-nullity theorem",
       "Read rank off a row-echelon form",
+      "Compute Null(A) by row reduction",
     ],
     videos: [
       V("uQhTuRlWMxw", "Inverse matrices, column space and null space — Chapter 7", "3Blue1Brown", "12:09"),
+      V("_uTAdf_AsfQ", "Null space and column space basis (worked example)", "Khan Academy", "24:46", "supplement"),
     ],
     notes: `
 <h2>Four fundamental subspaces</h2>
@@ -797,13 +821,30 @@ const phase2: Omit<Day, "questions">[] = [
 <p>For every matrix, dim Row(A) = dim Col(A) = rank(A). This is non-obvious yet fundamental.</p>
 <h3>Reading rank from REF</h3>
 <p>Number of non-zero rows in REF equals rank. The pivot columns of A form a basis of Col(A).</p>
-<h3>Worked example</h3>
+<h3>Worked example — rank from a matrix at a glance</h3>
 <p>A = [[1,2,3],[2,4,6],[3,6,9]]. All rows are multiples of (1,2,3), so rank = 1, nullity = 2.</p>
+<h3>Worked example — computing Null(A) by row reduction</h3>
+<p>Find Null(A) for A = [[1, 2, 3], [0, 1, 2]]. Solve Ax = 0:</p>
+<ol>
+  <li>Row 2 already reads: x₂ + 2x₃ = 0 ⇒ x₂ = −2x₃</li>
+  <li>Row 1: x₁ + 2x₂ + 3x₃ = 0 ⇒ x₁ = −2x₂ − 3x₃ = −2(−2x₃) − 3x₃ = x₃</li>
+  <li>Pivots are in columns 1 and 2; column 3 is free. Set x₃ = t.</li>
+  <li>x = t · (1, −2, 1)ᵀ. So <strong>Null(A) = span { (1, −2, 1)ᵀ }</strong>, dimension 1.</li>
+</ol>
+<p>Sanity check via rank-nullity: A has rank 2 (two pivot rows), n = 3 columns, so nullity = 3 − 2 = 1. ✓</p>
+<h3>Recipe</h3>
+<ol>
+  <li>Row-reduce A to RREF.</li>
+  <li>Identify pivot columns (basic variables) and non-pivot columns (free variables).</li>
+  <li>Express each basic variable in terms of the free variables.</li>
+  <li>Set each free variable to 1 (others 0) in turn — each gives a basis vector for Null(A).</li>
+</ol>
 `,
     formulas: [
       F("Rank-nullity", "rank(A) + nullity(A) = n", "n = number of columns."),
       F("Column space", "Col(A) = span of columns", "Image of x ↦ Ax."),
       F("Null space", "{ x : Ax = 0 }", "Kernel of the linear map."),
+      F("Nullity from RREF", "nullity = (free columns)", "Each free variable contributes one basis vector."),
     ],
     summary: "Rank = number of independent columns = number of independent rows. Nullity fills the rest of ℝⁿ.",
   },
@@ -854,9 +895,11 @@ const phase2: Omit<Day, "questions">[] = [
       "Compute A^{-1} for 2 × 2 and 3 × 3 matrices",
       "Distinguish invertible from singular matrices",
       "Define the Moore-Penrose pseudo-inverse",
+      "Know when to use A⁺ instead of A^{-1}",
     ],
     videos: [
       V("uQhTuRlWMxw", "Inverse matrices, column space and null space — Chapter 7", "3Blue1Brown", "12:09"),
+      V("bZSuzCsq4w4", "The Moore-Penrose Pseudo-Inverse", "Mike the Mathematician", "11:48", "supplement"),
     ],
     notes: `
 <h2>When does A^{-1} exist?</h2>
@@ -874,16 +917,47 @@ const phase2: Omit<Day, "questions">[] = [
 <h3>Pseudo-inverse (Moore-Penrose)</h3>
 <p>For any matrix A (even non-square or singular), the pseudo-inverse A⁺ exists. From SVD A = UΣVᵀ:</p>
 <div class="formula-block">A⁺ = V Σ⁺ Uᵀ</div>
-<p>where Σ⁺ replaces non-zero singular values by their reciprocals (zeros remain zero). The OLS solution becomes β̂ = X⁺ y.</p>
-<h3>Worked example</h3>
+<p>where Σ⁺ replaces non-zero singular values by their reciprocals (zeros remain zero).</p>
+<h3>When to use A⁺ instead of A^{-1}</h3>
+<p>The ordinary inverse only exists for square, full-rank A. In real ML / regression problems, the design matrix X is almost always:</p>
+<ul>
+  <li><strong>Tall and thin</strong> (m &gt; n, more data points than features) — so X is rectangular, never invertible</li>
+  <li><strong>Possibly rank-deficient</strong> — collinear features ⇒ XᵀX is singular</li>
+</ul>
+<p>For these cases, A⁺ gives the unique least-squares minimum-norm solution. The closed-form OLS estimator becomes:</p>
+<div class="formula-block">β̂ = X⁺ y</div>
+<h3>Two cleaner formulas when X has full column rank</h3>
+<p>If X is m × n with rank n (no collinearity), A⁺ collapses to a simple closed form:</p>
+<div class="formula-block">X⁺ = (XᵀX)^{-1} Xᵀ  ⇒  β̂ = (XᵀX)^{-1} Xᵀ y</div>
+<p>This is the formula you'll meet in Day 38 (multiple linear regression). Mirror form: if X has full row rank (m &lt; n, wide matrix), X⁺ = Xᵀ(XXᵀ)^{-1}.</p>
+<h3>Worked example — square invertible</h3>
 <p>A = [[1,2],[3,4]]. det = −2. A^{-1} = (1/−2) [[4,−2],[−3,1]] = [[−2,1],[1.5,−0.5]].</p>
+<h3>Worked example — tall thin via X⁺ = (XᵀX)^{-1} Xᵀ</h3>
+<p>Fit y = β₀ + β₁ x through three points (1, 1), (2, 2), (3, 2). Design matrix X = [[1,1],[1,2],[1,3]] (column of 1s, then x).</p>
+<ol>
+  <li>XᵀX = [[3, 6], [6, 14]], det = 6. (XᵀX)^{-1} = (1/6) · [[14, −6], [−6, 3]].</li>
+  <li>Xᵀy = [[1+2+2], [1·1+2·2+3·2]] = [[5], [11]].</li>
+  <li>β̂ = (XᵀX)^{-1} Xᵀy = (1/6) · [[14·5 − 6·11], [−6·5 + 3·11]] = (1/6) · [[4], [3]] = [0.667, 0.5]ᵀ.</li>
+</ol>
+<p>So the best-fit line is y ≈ 0.667 + 0.5 x. β̂ = X⁺ y was used implicitly — the pseudo-inverse <em>is</em> the OLS solver.</p>
+<h3>Properties of A⁺ (Penrose conditions)</h3>
+<ol>
+  <li>A A⁺ A = A</li>
+  <li>A⁺ A A⁺ = A⁺</li>
+  <li>(A A⁺)ᵀ = A A⁺  (A A⁺ is symmetric)</li>
+  <li>(A⁺ A)ᵀ = A⁺ A  (A⁺ A is symmetric)</li>
+</ol>
+<p>If A is square invertible, A⁺ = A^{-1}.</p>
 `,
     formulas: [
       F("2 × 2 inverse", "1/det · [[d,−b],[−c,a]]", "Swap diagonal, negate off-diagonal."),
       F("Product inverse", "(AB)^{-1} = B^{-1} A^{-1}", "Reverse order."),
-      F("Pseudo-inverse", "A⁺ = V Σ⁺ Uᵀ", "Generalises inverse to any matrix."),
+      F("Pseudo-inverse (SVD)", "A⁺ = V Σ⁺ Uᵀ", "Always exists; reciprocal of non-zero singular values."),
+      F("Pseudo-inverse (full col rank)", "X⁺ = (XᵀX)^{-1} Xᵀ", "OLS closed form for tall X."),
+      F("Pseudo-inverse (full row rank)", "X⁺ = Xᵀ (XXᵀ)^{-1}", "Minimum-norm solution for wide X."),
+      F("OLS via pseudo-inverse", "β̂ = X⁺ y", "Solves min ||y − Xβ||²."),
     ],
-    summary: "Inverse exists ⇔ non-singular. Pseudo-inverse always exists via SVD and solves least squares.",
+    summary: "Inverse exists ⇔ square + non-singular. Pseudo-inverse always exists via SVD and is the universal least-squares solver: β̂ = X⁺ y. For full column rank X, X⁺ = (XᵀX)^{-1} Xᵀ — the formula you'll use in regression.",
   },
   {
     id: 22, date: dateForDay(22), phase: 2, subject: "linear-algebra",
