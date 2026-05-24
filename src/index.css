@@ -27,6 +27,9 @@
   .formula-block {
     @apply my-3 inline-block rounded-md bg-iitm-50 px-4 py-2 font-mono text-iitm-700 dark:bg-iitm-900/40 dark:text-iitm-100;
   }
+  .extension-banner {
+    @apply my-4 rounded-md border-l-4 border-amber-400 bg-amber-50 px-4 py-2 text-sm text-amber-900 dark:border-amber-500 dark:bg-amber-950/40 dark:text-amber-100;
+  }
   .card {
     @apply rounded-xl border border-paper-200 bg-paper-100 p-5 shadow-sm dark:border-ink-600 dark:bg-ink-700;
   }

@@ -53,11 +53,13 @@ export const SUBJECT_LABELS: Record<Subject, string> = {
   revision: "Revision & Mocks",
 };
 
+// Calibrated against the official IITM CODE AI 2026 sample paper:
+// 16 Prob/Stats, 14 Linear Algebra, 1 Optimization, 9 ML out of 40 questions.
 export const SUBJECT_WEIGHTS: Record<Subject, number> = {
-  probability: 0.38,
-  "linear-algebra": 0.27,
-  optimization: 0.15,
-  ml: 0.2,
+  probability: 0.4,
+  "linear-algebra": 0.35,
+  optimization: 0.025,
+  ml: 0.225,
   revision: 0,
 };
 
@@ -75,12 +77,42 @@ export const PHASE_INFO: Record<
 export const COURSE_START_DATE = "2026-05-19";
 export const EXAM_DATE = "2026-07-19";
 
+// All date arithmetic happens in the user's LOCAL timezone, not UTC.
+// (Mixing local-parsed Date with toISOString() would shift the date
+// back by one day for positive-UTC-offset locales like IST.)
 export function addDays(dateStr: string, days: number): string {
-  const d = new Date(dateStr + "T00:00:00");
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m - 1, d + days);
+  const yy = dt.getFullYear();
+  const mm = String(dt.getMonth() + 1).padStart(2, "0");
+  const dd = String(dt.getDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
 }
 
 export function dateForDay(dayId: number): string {
   return addDays(COURSE_START_DATE, dayId - 1);
+}
+
+export function todayLocalISO(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+// Format an ISO YYYY-MM-DD string for human display.
+// Default style: "Sun, 25 May 2026" (browser locale, abbreviated weekday/month).
+export function formatDateDisplay(isoDate: string): string {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+export function todayDisplay(): string {
+  return formatDateDisplay(todayLocalISO());
 }

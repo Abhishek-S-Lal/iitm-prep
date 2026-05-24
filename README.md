@@ -1,6 +1,6 @@
 # IITM MTech AI — 60-Day Entrance Prep
 
-A self-paced React PWA for the IIT Madras CODE Web-Enabled MTech in AI entrance exam (target date: July 19, 2026). Daily NPTEL-aligned lessons, 300 practice questions, weighted mock tests, daily push reminders, and cross-device sync — all on Netlify's free tier.
+A self-paced React PWA for the IIT Madras CODE Web-Enabled MTech in AI entrance exam (target date: July 19, 2026). Daily NPTEL-aligned lessons, 380+ practice questions (incl. the official IITM 2026 sample paper), four mock-test variants, daily push reminders, and cross-device sync — all on Netlify's free tier.
 
 🔗 **Live**: https://iitm-code-ai.netlify.app/
 
@@ -9,8 +9,8 @@ A self-paced React PWA for the IIT Madras CODE Web-Enabled MTech in AI entrance 
 ### Study content
 - **60 daily lessons** spanning Probability & Statistics, Linear Algebra, Optimization, and Basic ML
 - Primary videos from the official IITM NPTEL *Data Science for Engineers* course (Prof. Raghunathan Rengaswamy), with StatQuest / 3Blue1Brown supplements
-- **330+ practice questions** tagged by subject (5+ per day; gap days have 7–9), including all 32 syllabus-relevant questions from the 2023 and 2025 IITM Zanzibar sample papers (the closest publicly available reference for IITM CODE AI exam style)
-- **Three mock-test variants** (mini, 50-mark, 100-mark) drawn weighted by the actual exam topic proportions
+- **380+ practice questions** tagged by subject (5+ per day; content-heavy days reach 11–13 after official-paper injections), including all 32 syllabus-relevant questions from the 2023 and 2025 IITM Zanzibar sample papers AND all 40 questions from the **official IITM CODE AI 2026 sample paper** shared with admitted candidates (every official question is also injected into the topically-aligned day so it shows up in the daily quiz pool)
+- **Four mock-test variants** — *Official 2026 paper* (all 40 questions in original order), 100-mark, 50-mark, and mini — the random-draw variants are weighted by the actual exam topic mix calibrated from the official sample (Stats 40%, LA 35%, ML 22.5%, Optimization 2.5%)
 - Exam-day countdown, study-streak heatmap, per-phase progress bars
 - Light (warm cream) and dark (Vercel-style) themes; mobile responsive
 
@@ -37,15 +37,7 @@ Subscribers manage everything in-app at **⚙️ Settings**.
 - Unauthenticated by design (the UI warns users that anyone with their email can read/overwrite). Upgrade path: magic-link auth via Resend — sketched in the [follow-ups](#follow-ups) section.
 
 ### SEO
-- Full meta tags (description, keywords, canonical, Open Graph, Twitter Card) in `index.html`
-- Per-page `<title>` / description / canonical via `useDocumentMeta` hook
-- JSON-LD structured data (`WebSite` + `Course` with `teaches`, `provider`, `creator` Person with `sameAs` social links)
-- `public/robots.txt` and `public/sitemap.xml` (covers `/`, `/mock`, `/progress`, 4 subject pages, 60 day pages)
-- Open Graph image at `/og-image.png`
-- `<noscript>` fallback content so non-JS crawlers still see the pitch
-
-### Analytics
-- **Cloudflare Web Analytics** — free, privacy-friendly, no cookies, no consent banner. Token embedded in `index.html`.
+Standard PWA SEO — full meta tags, OG / Twitter Card, JSON-LD (`WebSite` + `Course`), per-page title/canonical via `useDocumentMeta`, `robots.txt`, `sitemap.xml`, and `<noscript>` fallback content.
 
 ### Security
 - API endpoints reject cross-origin browser requests (same-origin Origin check + 403 on mismatch)
@@ -55,10 +47,6 @@ Subscribers manage everything in-app at **⚙️ Settings**.
 - `Cache-Control: immutable` for hashed assets; `no-cache` for `/sw.js` so service-worker updates roll out instantly
 - `.gitignore` covers `.env*` (allowlists `.env.example`); no secrets ever committed to git history
 
-### Attribution
-- Footer on every page links to the author's [website](https://abhishekslal.dev/), [LinkedIn](https://www.linkedin.com/in/abhishekslal/), [X](https://x.com/abhishek_s_lal), [Instagram](https://www.instagram.com/abhishekslal/)
-- Surfaced in JSON-LD as the `creator` Person on the `Course` schema
-
 ## Tech stack
 
 - **Frontend** — React 18, TypeScript, Vite 5, React Router v6, Tailwind CSS v3 (custom `iitm` / `paper` / `ink` palette)
@@ -66,7 +54,6 @@ Subscribers manage everything in-app at **⚙️ Settings**.
 - **PWA** — `vite-plugin-pwa` (injectManifest strategy) + Workbox + a hand-written service worker in `src/sw.ts` for push and notification-click handling
 - **Backend** — Netlify Functions (TypeScript, ESM) + Netlify Blobs for storage + `web-push` for VAPID-signed pushes
 - **Scheduled work** — Netlify Scheduled Functions (`@hourly`)
-- **Analytics** — Cloudflare Web Analytics (third-party beacon)
 
 Everything stays inside the Netlify free tier at this app's scale; see `Free-tier audit` further down.
 
@@ -91,7 +78,7 @@ Output goes to `dist/` (Vite build) plus the service worker `dist/sw.js`.
 
 ## Configuration
 
-The app builds and runs with zero config — but push notifications and analytics need a few env vars set in Netlify.
+The app builds and runs with zero config — but push notifications need a few env vars set in Netlify.
 
 Copy `.env.example` to see the full list. Set these in **Site settings → Build & deploy → Environment → Environment variables**:
 
@@ -126,11 +113,13 @@ After setup, every `git push` to `main` redeploys automatically.
 ## Folder structure
 
 ```
+INDEX.md              concept-to-day reverse lookup; phase tables; official-sample Q→day map (use this to navigate without opening curriculum.ts/questions.ts)
+
 src/
   data/
     types.ts            types, subject metadata, exam-date helpers
     curriculum.ts       all 60 days (objectives, videos, notes, formulas, summary)
-    questions.ts        300 questions tagged by subject
+    questions.ts        ~380 questions tagged by subject (inline per-day pool + officialSample2026 array)
     motivations.ts      psychology-backed message pool for daily reminders
   store/
     progressStore.ts    Zustand: completed days, quiz scores, streak, mocks, theme
@@ -143,7 +132,7 @@ src/
     useCloudSync.ts     initial pull + debounced push to /api/sync
     useVideoOrientation.ts unlocks portrait lock when video enters fullscreen
   components/
-    Layout.tsx          header, sidebar, mobile drawer, theme toggle, install prompt, footer
+    Layout.tsx          sidebar, mobile drawer + floating hamburger, scroll-position restore, theme toggle + GitHub link, install prompt, footer
     Sidebar.tsx         phase-grouped day navigation
     VideoPlayer.tsx     lazy-mounted YouTube embed
     QuizCard.tsx        MCQ / MSQ / numerical question
@@ -184,7 +173,6 @@ Mapped against Netlify's free-tier limits:
 | Function invocations | 125,000/mo | 720 cron + sync activity | See note |
 | Function runtime | 100 hrs/mo | <4 hrs at 50k calls | 25× under |
 | Netlify Blobs | Included | ~6 KB per user | Negligible |
-| Cloudflare Web Analytics | Free, unlimited | — | — |
 
 **Function invocations note**: comfortably free for <50 daily active users. Around ~100 DAU you'd approach the 125k limit (mostly from auto-push sync calls). Levers if it ever grows: raise the sync debounce from 1.5s to 10s+, or upgrade to Netlify Pro ($19/mo includes 2M invocations). No surprise bills — Netlify pauses on free-tier exhaustion rather than auto-charging.
 
@@ -203,10 +191,9 @@ Things deliberately left out, in case the app grows:
 - 3Blue1Brown — *Essence of Linear Algebra* / *Bayes theorem*
 - StatQuest with Josh Starmer — statistics & ML series
 - CODE IIT Madras — Web-Enabled MTech in AI brochure ([source](https://code.iitm.ac.in/webmtech))
+- IITM CODE AI 2026 official sample paper — the actual reference paper shared by IIT Madras with admitted candidates. All 40 questions integrated into the daily quiz pool AND surfaced as a standalone *Official 2026 paper* mock variant
 - IITM Zanzibar 2023 and 2025 sample papers — same four-topic AI syllabus, integrated into the daily quiz pool (questions tagged with their paper of origin in the explanation)
 
 ## Author
 
 Built by **Abhishek S Lal** — [website](https://abhishekslal.dev/) · [LinkedIn](https://www.linkedin.com/in/abhishekslal/) · [X](https://x.com/abhishek_s_lal) · [Instagram](https://www.instagram.com/abhishekslal/)
-
-Free for everyone preparing for the IITM CODE MTech AI exam. If it helps you, share it with someone else who's prepping.

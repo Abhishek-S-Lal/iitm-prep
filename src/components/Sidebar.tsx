@@ -2,13 +2,15 @@ import { useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { curriculum } from "../data/curriculum";
 import { useProgress } from "../store/progressStore";
-import { PHASE_INFO, dateForDay, COURSE_START_DATE, type Phase } from "../data/types";
+import { PHASE_INFO, COURSE_START_DATE, todayDisplay, type Phase } from "../data/types";
 
 function todayDayId(): number {
-  const today = new Date().toISOString().slice(0, 10);
-  const start = new Date(COURSE_START_DATE + "T00:00:00").getTime();
-  const now = new Date(today + "T00:00:00").getTime();
-  const diff = Math.floor((now - start) / 86400000) + 1;
+  // Compare local midnights to avoid UTC offset drift (e.g. IST is UTC+5:30).
+  const now = new Date();
+  const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const [sy, sm, sd] = COURSE_START_DATE.split("-").map(Number);
+  const startMs = new Date(sy, sm - 1, sd).getTime();
+  const diff = Math.floor((todayMs - startMs) / 86400000) + 1;
   return Math.max(1, Math.min(60, diff));
 }
 
@@ -139,7 +141,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         );
       })}
       <div className="mt-3 px-3 pb-3 text-[10px] text-slate-400">
-        Today: {dateForDay(today)} · Day {today}/60
+        Today: {todayDisplay()} · Day {today}/60
       </div>
     </nav>
   );

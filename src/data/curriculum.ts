@@ -31,21 +31,32 @@ const phase1: Omit<Day, "questions">[] = [
   <li><strong>Optimization</strong> — types, univariate, multivariate, gradient descent</li>
   <li><strong>Basic Machine Learning</strong> — simple & multiple linear regression, least-squares, kNN, logistic regression, k-means, cross-validation</li>
 </ul>
-<p>Approximate weighting: Stats ~38%, LA ~27%, Opt ~15%, ML ~20%.</p>
+<p>Actual exam weighting (calibrated against the official IITM CODE AI 2026 sample paper): <strong>Stats 40% · Linear Algebra 35% · ML 22.5% · Optimization 2.5%</strong>. Optimization is intentionally light — the official sample has only 1 optimization question out of 40. Don't over-invest there.</p>
 <h3>What the actual paper looks like</h3>
-<p>CODE IITM has not published a sample paper for the AI entrance, but its sister program at IIT Madras Zanzibar uses the <em>same four-topic syllabus</em>, and IITMZ's 2023 sample paper is the closest publicly available reference for question style. Patterns to expect:</p>
+<p>IITM CODE has now shared the official 2026 sample paper with admitted candidates — all 40 questions are integrated into this app's daily quiz pool AND available as a single mock variant ("Official 2026 paper"). Older IITM Zanzibar 2023 / 2025 papers are also included (32 syllabus-relevant questions tagged in the explanations). Question patterns the exam actually uses:</p>
 <ol>
-  <li>Which correlation method works for categorical variables? (MSQ — Spearman, Kendall's Tau, Pearson)</li>
-  <li>Conditional probability across multiple supplier batches</li>
-  <li>Z-score reverse lookup (given z and mean/SD, find score)</li>
-  <li>Bayes / COVID test with sensitivity 96.5% and specificity 97%, prevalence 0.23%</li>
-  <li>t-statistic for a sample of 10</li>
-  <li>Rank of a matrix; eigenvectors of a 2×2; properties of singular matrices (MSQ)</li>
-  <li>Joint probability of two uniform RVs</li>
-  <li>Absolute max/min of polynomial like 8x − x⁴</li>
-  <li>Updating a running mean given a new observation</li>
+  <li>Independence vs mutual exclusivity on small event sets (official Q1, MSQ)</li>
+  <li>Sigmoid function limits (official Q2)</li>
+  <li>Two-stage Bayes — battery accept/reject with conditional accept rates (official Q34)</li>
+  <li>Orthogonality and orthonormalisation of 3-vectors (official Q4)</li>
+  <li>Confusion-matrix comparison between two models (official Q5)</li>
+  <li>Box-plot critical reading — false-conclusion trap (official Q6)</li>
+  <li>Determinant via complex conjugate eigenvalue pair (official Q7)</li>
+  <li>Non-trivial null space ⇔ det = 0 (official Q8)</li>
+  <li>Nilpotent (I − A)⁻¹ via geometric series (official Q11)</li>
+  <li>Eigenvalues from rank + trace, eigenvalues of A^k, rank-1 matrix eigenvalue (official Q12, Q14, Q17)</li>
+  <li>Uniform on disjoint support — mean (official Q15)</li>
+  <li>Joint density → marginal by integration (official Q16)</li>
+  <li>Least-squares minimisation of vertical residuals (official Q18)</li>
+  <li>Right-skewed → mean &gt; median (official Q19)</li>
+  <li>Z-test for a small sample with known σ (official Q20)</li>
+  <li>Order statistics conditional — min &lt; a AND max &gt; b on uniforms (official Q39)</li>
+  <li>F-statistic from two sample variances (official Q37)</li>
+  <li>Permutations without repetition across digit lengths (official Q38)</li>
+  <li>Median is robust, mean / variance / SD are not (official Q40)</li>
+  <li>kNN algorithm steps in order; K-means objective; LOOCV bias/variance (official Q35, Q30, Q27)</li>
 </ol>
-<p>You will solve every one of these patterns by Day 60.</p>
+<p>You will solve every one of these patterns by Day 60. After Day 49 you can take the full Official 2026 mock to dress-rehearse.</p>
 <h3>The official bridge course</h3>
 <p>The primary videos for this app are from the NPTEL <em>Data Science for Engineers</em> course taught by Prof. Raghunathan Rengaswamy (IIT Madras Chemical Engineering) — the playlist that current IIT Madras MTech AI students recommend to applicants. The course uses R for code demos; you do <strong>not</strong> need to learn R for the exam. Focus on the maths.</p>
 <h3>How exam questions are built</h3>
@@ -59,7 +70,7 @@ const phase1: Omit<Day, "questions">[] = [
   <li><strong>Phase 5 (D50–60):</strong> Three full mocks + targeted revision</li>
 </ul>
 <h3>How to use this app</h3>
-<p>Each day has a primary video (the official NPTEL lecture), optional supplements for visual intuition (StatQuest, 3Blue1Brown), formatted notes, a flashcard formula sheet and a 5-question quiz. You unlock <em>Mark Complete</em> only after attempting the quiz. Aim for 60–90 minutes per day; mocks (D50, D54, D59) require a 2-hour block.</p>
+<p>Each day has a primary video (the official NPTEL lecture), optional supplements for visual intuition (StatQuest, 3Blue1Brown), formatted notes, a flashcard formula sheet and a 5+-question quiz (content-heavy days reach 11–13 questions after official-paper injections). You unlock <em>Mark Complete</em> only after attempting the quiz. Aim for 60–90 minutes per day; mocks (D50, D54, D59) require a 2-hour block. Four mock variants are available throughout: Official 2026 paper, 100-mark, 50-mark, and a 10-question mini.</p>
 <p><strong>If you are rusty</strong> (CS grad, did ML once long ago), start with the supplement video for visual intuition, then watch the NPTEL primary for the formal version that aligns with what the examiners teach.</p>
 <h3>Why probability for AI?</h3>
 <p>Every prediction a model makes — a class label, a forecast, a parameter estimate — is <strong>uncertain</strong>. Probability is the language in which that uncertainty is measured, communicated and reasoned about. Without it, "the model says cat" is a guess; with it, "the model assigns 0.87 probability to cat" is a calibrated belief you can act on. This is why probability is the first phase of this prep: every later topic (regression, classification, mock-test scoring) rests on it.</p>
@@ -79,7 +90,7 @@ const phase1: Omit<Day, "questions">[] = [
 <p>"Low bias + high variance" describes a model that fits the training data very well (low average error) but is unstable across samples — the textbook signature of <strong>over-fitting</strong>. We unpack this fully on Day 40; for Day 1 the headline is enough.</p>
 `,
     formulas: [
-      F("Exam weight", "Stats 38% · LA 27% · Opt 15% · ML 20%", "Allocate study time roughly in proportion to weight."),
+      F("Exam weight", "Stats 40% · LA 35% · ML 22.5% · Opt 2.5%", "Calibrated against the official IITM CODE AI 2026 sample paper (16 / 14 / 9 / 1 questions out of 40)."),
       F("Study cadence", "60–90 min/day, 7 days/week", "Daily consistency beats long weekend bursts for retention."),
     ],
     summary: "Today you set the foundation — the four-stage data-science workflow and your daily cadence. From tomorrow, we go deep into probability.",
@@ -196,6 +207,10 @@ const phase1: Omit<Day, "questions">[] = [
 <h3>Poisson(λ)</h3>
 <p>Count of events in a fixed interval at rate λ.</p>
 <div class="formula-block">P(X=k) = e^{−λ} λᵏ / k!,  E[X] = Var(X) = λ</div>
+<h3>E[(a + X)²] expansion (recurring exam pattern)</h3>
+<p>Whenever a question asks for E of a shifted-and-squared random variable, expand and reuse known moments rather than integrating:</p>
+<div class="formula-block">E[(a + X)²] = a² + 2a·E[X] + E[X²],  where  E[X²] = Var(X) + (E[X])²</div>
+<p>Worked: E[X]=1, Var(X)=5 ⇒ E[X²]=5+1=6, so E[(2+X)²] = 4 + 4 + 6 = 14 (IITM 2026 official sample Q24).</p>
 <h3>Worked example</h3>
 <p>Calls arrive at a switchboard at λ=3/hour. P(exactly 5 calls in an hour)?</p>
 <p>P(X=5) = e^{−3} · 3⁵ / 5! = (0.0498)(243/120) ≈ 0.1008.</p>
@@ -233,6 +248,10 @@ const phase1: Omit<Day, "questions">[] = [
 <div class="formula-block">E[X] = ∫ x · f(x) dx;  Var(X) = ∫ (x − μ)² f(x) dx</div>
 <h3>Uniform(a, b)</h3>
 <p>f(x) = 1/(b−a) on [a,b]. E[X] = (a+b)/2, Var(X) = (b−a)²/12.</p>
+<h3>Uniform on a disjoint union — IITM 2026 official sample Q15</h3>
+<p>If X is uniform on a union of disjoint intervals (e.g. [−2, 2] ∪ [99.5, 100.5]), density = 1/L on each piece where L = total support length (here L = 4 + 1 = 5). Compute the mean as a length-weighted average of the midpoints:</p>
+<div class="formula-block">E[X] = Σᵢ (midpointᵢ · lengthᵢ) / L_total</div>
+<p>For [−2, 2] ∪ [99.5, 100.5]: E[X] = (0·4 + 100·1)/5 = 20. Equivalent integral: (1/5)·[∫_{−2}^{2} x dx + ∫_{99.5}^{100.5} x dx] = (1/5)(0 + 100) = 20.</p>
 <h3>Exponential(λ)</h3>
 <p>f(x) = λ e^{−λx} for x ≥ 0. Memory-less. E[X] = 1/λ, Var(X) = 1/λ².</p>
 <h3>Normal(μ, σ²)</h3>
@@ -337,6 +356,16 @@ const phase1: Omit<Day, "questions">[] = [
 <h3>Worked example — sample-paper style</h3>
 <p>X and Y independent, both Uniform on [−1, 1]. Find P(X + Y &lt; 1).</p>
 <p>The joint density on the square [−1,1]² is 1/4. The region X + Y &lt; 1 covers almost the entire square except the triangle with vertices (1, 0), (0, 1), (1, 1). Triangle area = 1/2; total square area = 4; so P(X+Y &lt; 1) = (4 − 1/2)/4 = 7/8.</p>
+<h3>Order statistics — min and max of two i.i.d. uniforms</h3>
+<p>Let X, Y ~ U(0, 1) independent. Define m = min(X, Y), M = max(X, Y). For thresholds a, b ∈ (0, 1):</p>
+<ul>
+  <li>P(m ≥ a) = P(X ≥ a, Y ≥ a) = (1 − a)²</li>
+  <li>P(M ≤ b) = P(X ≤ b, Y ≤ b) = b²</li>
+  <li>P(m &lt; a) = 1 − (1 − a)²; P(M &gt; b) = 1 − b²</li>
+</ul>
+<p><strong>IITM 2026 official sample Q39:</strong> conditional P(M &gt; 3/4 | m &lt; 1/3). The joint event {m &lt; 1/3 AND M &gt; 3/4} = {one variable in [0, 1/3) and the other in (3/4, 1]}. The two orderings are disjoint, so:</p>
+<div class="formula-block">P(m &lt; 1/3 AND M &gt; 3/4) = 2 · (1/3) · (1/4) = 1/6</div>
+<p>P(m &lt; 1/3) = 1 − (2/3)² = 5/9. Conditional = (1/6)/(5/9) = 9/30 = 0.30.</p>
 `,
     formulas: [
       F("Covariance", "Cov(X,Y) = E[XY] − E[X]E[Y]", "Linear co-movement."),
@@ -383,6 +412,21 @@ const phase1: Omit<Day, "questions">[] = [
 </ul>
 <h3>Skewness ordering (worth memorising)</h3>
 <p>Right-skewed: <strong>mode &lt; median &lt; mean</strong>. Left-skewed: <strong>mean &lt; median &lt; mode</strong>. Symmetric: all three coincide.</p>
+<h3>Reading box plots critically (IITM 2026 official sample Q6 trap)</h3>
+<p>When asked which distribution is "better", anchor on the typical value (median), not the upper whisker:</p>
+<ul>
+  <li><strong>Higher median ⇒ higher typical value</strong> — defensible "better" claim for life-span / quality.</li>
+  <li><strong>"A's upper limit equals B's median" does NOT mean A is better.</strong> It means B's typical value matches A's best value — B is the stronger distribution. The fact is true; the conclusion drawn from it is the trap.</li>
+</ul>
+<h3>Monotonicity check from scattered (x, y) data</h3>
+<p>Different from linearity. To test monotonicity by hand: sort the points by x, then read y down the sorted list. If y never reverses direction → strictly monotonic (increasing or decreasing). Linearity (Pearson ρ) and rank correlation (Spearman) are separate tests; monotonic data may still be highly non-linear.</p>
+<h3>Robustness to outliers — breakdown points</h3>
+<p>The <strong>breakdown point</strong> is the fraction of data you can corrupt arbitrarily before the statistic moves arbitrarily.</p>
+<ul>
+  <li><strong>Median, IQR, MAD</strong>: 50% breakdown — half the data can be extreme without affecting them.</li>
+  <li><strong>Mean, variance, SD, range</strong>: 0% breakdown — a single extreme value moves them as far as you like.</li>
+</ul>
+<p>For heavy-tailed or contaminated data, prefer median / IQR over mean / SD.</p>
 <h3>Effect of transformations</h3>
 <ul>
   <li>Adding c shifts mean by c, variance unchanged</li>
@@ -453,6 +497,7 @@ const phase1: Omit<Day, "questions">[] = [
       V("hlM7zdf7zwU", "Confidence intervals and margin of error", "Khan Academy", "9:11", "supplement"),
     ],
     notes: `
+<div class="extension-banner"><strong>Extension day — not in the official 2026 syllabus.</strong> Confidence intervals are not listed in the syllabus (which lists CLT and hypothesis testing but not CIs). Useful for inferential intuition and ~1-question safety net, but safe to skim if you're time-pressed.</div>
 <h2>Confidence interval for a mean</h2>
 <p>Given x̄ from n samples with population σ known:</p>
 <div class="formula-block">CI = x̄ ± z_{α/2} · σ/√n</div>
@@ -579,6 +624,11 @@ const phase1: Omit<Day, "questions">[] = [
 <h3>Two-sample F-test for variance equality</h3>
 <p>To test H₀: σ₁² = σ₂² vs H₁: σ₁² ≠ σ₂² (e.g. before pooling samples or before a t-test that assumes equal variances), put the <em>larger</em> sample variance on top:</p>
 <div class="formula-block">F = s₁² / s₂²  with df = (n₁ − 1, n₂ − 1)</div>
+<h3>F-statistic when population variances are given (not tested)</h3>
+<p>Some IITM questions specify σ₁² and σ₂² as KNOWN population variances and ask for an F-statistic that compares <em>sample</em> variances against them. Then:</p>
+<div class="formula-block">F = (s₁² / σ₁²) / (s₂² / σ₂²)</div>
+<p>If σ₁² = σ₂², this collapses to F = s₁² / s₂². Identify the scenario from the wording: "find F-statistic for samples drawn from populations with σ² = …" means use the formula above.</p>
+<p>Worked (IITM 2026 official sample Q37): Sample 1 {25,25,18,16,26,26}, x̄₁ = 22.67, s₁² = 99.33/5 ≈ 19.87. Sample 2 {20,23,22,21,18,17}, x̄₂ = 20.17, s₂² = 26.83/5 ≈ 5.37. With σ₁² = σ₂² = 3, F = s₁²/s₂² ≈ 3.70.</p>
 <p>Reject H₀ if F &gt; F_{α/2, n₁−1, n₂−1} (or below the lower critical value).</p>
 <h3>Worked examples</h3>
 <p><strong>Chi-square independence:</strong> 3×4 contingency table → df = 2 × 3 = 6. With χ² = 14.07 and df = 6, p ≈ 0.029 → reject independence at α=0.05.</p>
@@ -637,6 +687,15 @@ const phase1: Omit<Day, "questions">[] = [
   <li>Conditional expectation E[Y | X = x]</li>
 </ol>
 <p>The 5 quiz questions in this app are spot-checks from these sets — attempt them, then revisit any wrong answers in the relevant prior days.</p>
+<h3>Combinatorics quick refresher (IITM 2026 official sample Q38)</h3>
+<p>Permutations without repetition — selecting k items from n in order:</p>
+<div class="formula-block">P(n, k) = n!/(n − k)! = n · (n − 1) · (n − 2) · … · (n − k + 1)</div>
+<p>Combinations — selecting k items from n, order ignored:</p>
+<div class="formula-block">C(n, k) = P(n, k) / k! = n! / (k!(n − k)!)</div>
+<p><strong>Multi-length counting</strong> — for "k-digit numbers from a digit set with no repetition", sum P(n, k) across the allowed lengths. Example: 2-, 3-, or 4-digit numbers from {1,2,3,4,5} → P(5,2) + P(5,3) + P(5,4) = 20 + 60 + 120 = 200.</p>
+<h3>Independence vs mutual exclusivity (recurring trap)</h3>
+<p>Two events are <strong>independent</strong> iff P(A∩B) = P(A)P(B). They are <strong>mutually exclusive</strong> iff A∩B = ∅, i.e. P(A∩B) = 0. The two are nearly opposite — if P(A) &gt; 0 and P(B) &gt; 0, mutually exclusive ⇒ NOT independent (because P(A∩B)=0 ≠ P(A)P(B)&gt;0).</p>
+<p><strong>"At least one" complement trick:</strong> P(at least one of A, B, …) = 1 − P(none) = 1 − P(A')P(B')… (when independent). Saves you from inclusion–exclusion in coin/dice problems.</p>
 `,
     formulas: [
       F("Top-of-mind checklist", "P(A|B), Bayes, CLT, CI, z/t-test, χ², ρ", "If any of these feel slow, revisit days 2–12."),
@@ -924,6 +983,17 @@ const phase2: Omit<Day, "questions">[] = [
   <li>Express each basic variable in terms of the free variables.</li>
   <li>Set each free variable to 1 (others 0) in turn — each gives a basis vector for Null(A).</li>
 </ol>
+<h3>Singularity ↔ nullity ↔ determinant (square matrices)</h3>
+<p>For a square n × n matrix A, the following are equivalent:</p>
+<ul>
+  <li>A is <strong>singular</strong> (non-invertible)</li>
+  <li>det(A) = 0</li>
+  <li>rank(A) &lt; n</li>
+  <li>nullity(A) ≥ 1, i.e. <strong>there is at least one non-trivial vector x ≠ 0 with Ax = 0</strong></li>
+  <li>The columns are linearly dependent</li>
+  <li>0 is an eigenvalue of A</li>
+</ul>
+<p><strong>IITM 2026 official sample Q8</strong> uses this directly: "A has at least one non-trivial null-space vector" is a code-word for det(A) = 0 — set the determinant expansion to zero and solve for the parameters.</p>
 `,
     formulas: [
       F("Rank-nullity", "rank(A) + nullity(A) = n", "n = number of columns."),
@@ -1025,6 +1095,11 @@ const phase2: Omit<Day, "questions">[] = [
   <li>β̂ = (XᵀX)^{-1} Xᵀy = (1/6) · [[14·5 − 6·11], [−6·5 + 3·11]] = (1/6) · [[4], [3]] = [0.667, 0.5]ᵀ.</li>
 </ol>
 <p>So the best-fit line is y ≈ 0.667 + 0.5 x. β̂ = X⁺ y was used implicitly — the pseudo-inverse <em>is</em> the OLS solver.</p>
+<h3>Neumann / geometric series for (I − A)⁻¹</h3>
+<p>If A is nilpotent (A<sup>k</sup> = 0 for some k), or more generally if the series converges, then:</p>
+<div class="formula-block">(I − A)⁻¹ = I + A + A² + A³ + … + A^(k−1)</div>
+<p>Verify: (I − A)(I + A + … + A^(k−1)) = I − A^k = I. The inverse exists because every eigenvalue of a nilpotent A is 0, so eigenvalues of I − A are all 1 and det(I − A) = 1 ≠ 0.</p>
+<p><strong>Exam application (IITM 2026 official sample Q11):</strong> if A⁷ = 0, then (I − A)⁻¹ = I + A + A² + … + A⁶ — the series terminates exactly when the nilpotent power hits zero.</p>
 <h3>Properties of A⁺ (Penrose conditions)</h3>
 <ol>
   <li>A A⁺ A = A</li>
@@ -1072,6 +1147,12 @@ const phase2: Omit<Day, "questions">[] = [
 <p>u = (3, 0, 0), v = (1, 1, 0). u · v = 3. proj_v(u) = (3/2)(1,1,0) = (1.5, 1.5, 0). Residual: (1.5, −1.5, 0), which dots with v to zero — orthogonality confirmed.</p>
 <h3>Connection to least squares</h3>
 <p>The OLS fitted values are projections of y onto Col(X). Residuals are orthogonal to every column of X.</p>
+<h3>Normalisation and orthonormal sets (IITM 2026 official sample Q4)</h3>
+<p>To turn any non-zero vector into a unit vector, divide by its norm:</p>
+<div class="formula-block">û = u / ||u||,  where  ||u|| = √(u · u) = √(Σ uᵢ²)</div>
+<p>A set of vectors is <strong>orthonormal</strong> iff each is a unit vector AND every pair is orthogonal. Given an orthogonal set {v₁, …, v_k} (pairwise dot product zero), orthonormalise by normalising each: v̂ᵢ = vᵢ / ||vᵢ||.</p>
+<p>Worked: v₁ = (−3, 2, −7), v₂ = (5, −10, −5). v₁·v₂ = −15 − 20 + 35 = 0 → orthogonal. ||v₁|| = √62 ≈ 7.87, ||v₂|| = √150 ≈ 12.25. v̂₁ ≈ (−0.38, 0.25, −0.89), v̂₂ ≈ (0.41, −0.82, −0.41).</p>
+<p>For an orthogonal SET that isn't yet a basis (e.g. one vector short), use Gram–Schmidt to add more orthogonal vectors before normalising — see Day 27 problem set for the procedure.</p>
 `,
     formulas: [
       F("Dot product", "u·v = Σ uᵢ vᵢ", "Algebraic form."),
@@ -1183,6 +1264,7 @@ const phase2: Omit<Day, "questions">[] = [
       V("gXbThCXjZFM", "Singular Value Decomposition (SVD): Overview", "Steve Brunton", "13:23", "supplement"),
     ],
     notes: `
+<div class="extension-banner"><strong>Extension day — not in the official 2026 syllabus.</strong> The syllabus lists "eigenvalue decomposition"; SVD is the closely-related cousin that handles non-square / rectangular matrices. Worth understanding because it backs the pseudo-inverse (Day 21, which IS in syllabus) and PCA, but no direct SVD question appears on the official sample.</div>
 <h2>SVD theorem</h2>
 <p>Every real m × n matrix A admits a factorisation:</p>
 <div class="formula-block">A = U Σ Vᵀ</div>
@@ -1278,6 +1360,15 @@ const phase2: Omit<Day, "questions">[] = [
 <p>Eigenvalues, eigenvectors, diagonalisation, SVD basics.</p>
 <h3>Today's quiz samples 5 of these.</h3>
 <p>After scoring, revisit the worst-performing sub-topic days before tomorrow's mock.</p>
+<h3>Sneaky technique — solution differences span the null space (IITM 2026 official sample Q36)</h3>
+<p>If Ax = b has more than one solution, then for any two solutions x₁ and x₂:</p>
+<div class="formula-block">A(x₂ − x₁) = Ax₂ − Ax₁ = b − b = 0  ⇒  (x₂ − x₁) ∈ Null(A)</div>
+<p>So when an exam question hands you a particular set of solutions to Ax = b and asks "which vector is in Null(A)?", just compute differences of the given solutions and check if the candidate is a linear combination.</p>
+<p>Worked: Ax = b has solutions x₁ = (1, 2, 3), x₂ = (2, −3, 2), x₃ = (5, −8, 1). Then x₂ − x₁ = (1, −5, −1) and x₃ − x₁ = (4, −10, −2) both lie in Null(A). Test if (−12, 40, 8) lies in their span: solve k₁(1, −5, −1) + k₂(4, −10, −2) = (−12, 40, 8) → k₁ = −4, k₂ = −2, all three coordinates check.</p>
+<h3>Gram–Schmidt (referenced from Day 22)</h3>
+<p>Given a linearly independent set {v₁, v₂, …, vₖ}, build an orthogonal set {u₁, u₂, …, uₖ} with the same span:</p>
+<div class="formula-block">u₁ = v₁;  uⱼ = vⱼ − Σ_{i&lt;j} (vⱼ · uᵢ / ||uᵢ||²) uᵢ  for j ≥ 2</div>
+<p>Normalise each uⱼ to get an orthonormal basis. Useful for QR decomposition and as a constructive check that an orthogonal set is also a basis.</p>
 `,
     formulas: [
       F("Phase 2 checklist", "rank · det · eigen · SVD · projection", "If any feel slow, retreat to days 17–25."),
@@ -1507,6 +1598,7 @@ const phase3: Omit<Day, "questions">[] = [
   <li>Sum of convex functions is convex</li>
   <li>Composition with affine: f(Ax + b) convex if f is</li>
 </ul>
+<div class="extension-banner"><strong>Extension section — Lagrange &amp; KKT are not in the official 2026 syllabus.</strong> The syllabus explicitly says "unconstrained univariate and multivariate optimization, gradient descent." Convexity (the section above) IS broadly useful; constrained-optimisation machinery below is not tested directly on the sample paper. Skim for context; don't drill.</div>
 <h3>Lagrange multipliers for equality constraints</h3>
 <p>min f(x) s.t. g(x) = 0. Form the Lagrangian:</p>
 <div class="formula-block">L(x, λ) = f(x) + λ g(x)</div>
@@ -1556,6 +1648,14 @@ const phase3: Omit<Day, "questions">[] = [
   <li>Sketch a 2D contour if you can — it makes saddle vs minimum obvious</li>
   <li>For GD, after each step recompute the gradient at the new point, not the old one</li>
 </ul>
+<div class="extension-banner"><strong>Extension sections (Newton + coordinate descent) — beyond the syllabus.</strong> The official 2026 syllabus lists only "gradient descent." Worth a quick read for vocabulary, but not exam-critical.</div>
+<h3>Newton's method (second-order update)</h3>
+<p>Gradient descent uses only ∇f. Newton's method uses the Hessian H = ∇²f to take a curvature-aware step:</p>
+<div class="formula-block">x_{k+1} = x_k − H(x_k)⁻¹ ∇f(x_k)</div>
+<p>Near a non-degenerate minimum (H positive definite), Newton's method has <strong>quadratic convergence</strong>: the number of correct digits roughly doubles each iteration. Trade-off: each step costs an n × n Hessian solve. Practical compromises: quasi-Newton methods like BFGS / L-BFGS approximate H⁻¹ without computing it directly.</p>
+<p>One-dimensional form: x_{k+1} = x_k − f'(x_k)/f''(x_k). This is also the root-finding rule applied to f'.</p>
+<h3>Coordinate descent</h3>
+<p>Optimise one coordinate at a time, holding the others fixed: at iteration k, pick a coordinate i and update only xᵢ to minimise f(…, xᵢ, …). Especially fast when the problem is separable (Lasso, group-Lasso, large sparse linear systems) or each per-coordinate sub-problem has a closed form. Convergence: for smooth convex f, cyclic or randomised coordinate descent converges to the global minimum.</p>
 <h3>Optimisation meets ML: regularisation (preview of Days 38, 41, 42)</h3>
 <p>Several ML problem sets reuse the optimisation language to introduce <strong>regularisation</strong>: adding a penalty term to the loss to discourage large weights.</p>
 <ul>
@@ -1589,7 +1689,9 @@ const phase3: Omit<Day, "questions">[] = [
   <li>Second-derivative test: f''(x*) &gt; 0 ⇒ min</li>
   <li>Hessian PD ⇒ min; ND ⇒ max; indefinite ⇒ saddle</li>
   <li>Gradient descent: x ← x − η ∇f</li>
-  <li>Step size η ≤ 1/L for L-smooth f</li>
+  <li>Step size η ≤ 1/L for L-smooth f. <strong>L-smooth definition:</strong> ‖∇f(x) − ∇f(y)‖ ≤ L‖x − y‖ for all x, y (the gradient is Lipschitz-continuous with constant L; equivalently, the largest eigenvalue of the Hessian is bounded by L).</li>
+  <li>Newton's method: x ← x − H⁻¹ ∇f. Quadratic convergence near a non-degenerate minimum.</li>
+  <li>Coordinate descent: update one xᵢ at a time. Fast for separable / sparse problems.</li>
   <li>SGD: gradient on one sample</li>
   <li>Lagrange: L = f + λg; ∇_x L = 0, ∇_λ L = 0</li>
   <li>KKT: stationarity + primal + dual + complementary slackness</li>
@@ -1754,6 +1856,7 @@ const phase4: Omit<Day, "questions">[] = [
       V("2AQKmw14mHM", "R-squared, Clearly Explained (visual)", "StatQuest with Josh Starmer", "9:48", "supplement"),
     ],
     notes: `
+<div class="extension-banner"><strong>Extension day — not directly in the official 2026 syllabus.</strong> The syllabus lists "cross-validation" (Day 45) but not model-selection criteria (AIC, BIC, adjusted R²) or regularisation (Lasso, Ridge). Useful framing for the regression days, but no direct exam question on the official sample. Skim, don't drill.</div>
 <h2>R² and its limits</h2>
 <p>R² never decreases when features are added — so it's a poor stand-alone criterion. Use:</p>
 <h3>Adjusted R²</h3>
@@ -1845,6 +1948,18 @@ const phase4: Omit<Day, "questions">[] = [
 <h3>Why sigmoid?</h3>
 <p>Maps any real number into (0, 1), so output behaves like a probability. The linear score wᵀx + b is interpreted as log-odds:</p>
 <div class="formula-block">log(p / (1 − p)) = wᵀx + b</div>
+<h3>Sigmoid limits (IITM 2026 official sample Q2)</h3>
+<p>Worth memorising character-for-character:</p>
+<ul>
+  <li>σ(−∞) = 1 / (1 + e^{+∞}) = 1 / ∞ = <strong>0</strong></li>
+  <li>σ(0) = 1 / (1 + 1) = <strong>0.5</strong> (the decision boundary)</li>
+  <li>σ(+∞) = 1 / (1 + 0) = <strong>1</strong></li>
+  <li>Identity: σ(z) + σ(−z) = 1 (symmetry about 0.5)</li>
+  <li>Derivative: σ'(z) = σ(z)(1 − σ(z)) — peaks at 0.25 when z = 0</li>
+</ul>
+<h3>Linear posterior ⇒ linear decision boundary (IITM 2026 official sample Q9)</h3>
+<p>A decision boundary is the locus where two posteriors are equal — for binary classification, where P(class=1 | x) = 0.5. If the posterior is <em>affine in x</em>, say P(y=1|x) = wᵀx + b, then setting it to 0.5 gives a linear equation wᵀx + b = 0.5 — a hyperplane.</p>
+<p>Logistic regression itself has a posterior σ(wᵀx + b) that is non-linear in x, BUT σ(z) = 0.5 ⇔ z = 0, so the boundary still reduces to the linear equation wᵀx + b = 0. <em>The linearity of the boundary depends on the linearity of the log-odds, not of the probability itself.</em></p>
 <h3>Loss function</h3>
 <p>Negative log-likelihood under Bernoulli model = binary cross-entropy:</p>
 <div class="formula-block">L = −Σ [yᵢ log ŷᵢ + (1 − yᵢ) log(1 − ŷᵢ)]</div>
@@ -1892,7 +2007,14 @@ const phase4: Omit<Day, "questions">[] = [
 <div class="formula-block">F1 = 2 · Precision · Recall / (Precision + Recall)</div>
 <div class="formula-block">Specificity = TN / (TN + FP)</div>
 <h3>ROC curve</h3>
-<p>Plot TPR vs FPR as τ varies. AUC (area under the ROC) summarises performance: 0.5 random, 1.0 perfect.</p>
+<p>Plot TPR (y) vs FPR (x) as τ varies. AUC (area under the ROC) summarises performance: 0.5 random, 1.0 perfect.</p>
+<h3>Corner points — memorise the four labels</h3>
+<ul>
+  <li><strong>(0, 0)</strong> — threshold so high nothing is predicted positive. TPR = 0, FPR = 0. Model classifies <em>only negatives</em> correctly (predicts everything negative).</li>
+  <li><strong>(1, 1)</strong> — threshold so low everything is predicted positive. TPR = 1, FPR = 1. Model classifies <em>only positives</em> correctly (predicts everything positive). <em>IITM 2026 official sample Q26.</em></li>
+  <li><strong>(0, 1)</strong> — perfect classifier: catches all positives with zero false alarms.</li>
+  <li><strong>(1, 0)</strong> — perfectly wrong (flips labels); flip the predictions and you get (0, 1).</li>
+</ul>
 <h3>Class imbalance</h3>
 <p>With rare positives, accuracy is misleading (predicting all-zero may score 99%). Prefer precision, recall, F1, AUC, or balanced accuracy. Resampling or class weights can help training.</p>
 <h3>Worked example</h3>
@@ -2022,6 +2144,12 @@ const phase4: Omit<Day, "questions">[] = [
   <li>Average the k validation scores</li>
 </ol>
 <p>Typical k = 5 or 10. k = n is leave-one-out (LOOCV) — high variance but nearly unbiased.</p>
+<h3>LOOCV bias vs variance — IITM 2026 official sample Q27</h3>
+<ul>
+  <li><strong>LOOCV has LESS bias than a single validation split</strong> in estimating the test MSE — each fold uses n − 1 training points, almost the full dataset.</li>
+  <li><strong>LOOCV has HIGH variance</strong> because the n training sets overlap heavily; their fitted models are highly correlated.</li>
+  <li><strong>LOOCV does NOT favour parsimony.</strong> Because its low bias makes complex models look comparatively cheaper to validate, LOOCV can <em>select more parameters than optimal</em> compared with k = 5 or 10. In MSE-estimation terms the trade-off is: low bias, high variance, no parsimony preference.</li>
+</ul>
 <h3>Stratified k-fold</h3>
 <p>Preserve class proportions within each fold. Essential for imbalanced classification.</p>
 <h3>Pipeline discipline</h3>
@@ -2059,6 +2187,16 @@ const phase4: Omit<Day, "questions">[] = [
 <p>VIF_j = 1 / (1 − R²_j) where R²_j regresses feature j on all others. VIF &gt; 5 raises a flag; &gt; 10 a serious problem.</p>
 <h3>Problem 5 — projection residuals</h3>
 <p>OLS residuals e = y − ŷ satisfy Xᵀ e = 0, so they are orthogonal to every feature.</p>
+<h3>Diagnostic — reading residual patterns</h3>
+<p>OLS assumes residuals are i.i.d. mean-zero with constant variance. Plot residuals vs fitted ŷ and vs each feature. Patterns are diagnostic:</p>
+<ul>
+  <li><strong>Curve or U-shape</strong> → missing non-linear term (add x², log x, or use a non-linear model). Indicates <strong>model bias</strong>.</li>
+  <li><strong>Funnel / fan</strong> (variance grows or shrinks with ŷ) → <strong>heteroscedasticity</strong>. Use weighted least squares, transform y (log, √), or use robust standard errors.</li>
+  <li><strong>Autocorrelation</strong> (residuals tracked by time index drift) → time-series structure unexplained; consider AR / GLS.</li>
+  <li><strong>Heavy tails / clear outliers</strong> → consider robust regression (Huber, RANSAC).</li>
+  <li><strong>Truly random cloud</strong> → assumptions look satisfied; trust the standard errors and CIs.</li>
+</ul>
+<p><em>Patterned residuals are the single best signal that your model is missing structure.</em></p>
 <h3>Tips</h3>
 <ul>
   <li>For 2-variable problems, the formula β̂₁ = Cov(x,y)/Var(x) is faster than the matrix form</li>
@@ -2133,6 +2271,13 @@ const phase4: Omit<Day, "questions">[] = [
   <li><strong>Unsupervised structure discovery</strong> → k-means, GMM, hierarchical</li>
   <li><strong>Very high dimensionality</strong> → linear methods + regularisation; avoid raw kNN</li>
 </ul>
+<h3>Discriminative vs generative models</h3>
+<p>A second axis for the algorithm table — every classifier sits in exactly one of these camps:</p>
+<ul>
+  <li><strong>Discriminative</strong> models learn the conditional P(y | x) directly (or just a decision boundary, no probabilities). They optimise the question you actually ask at test time. Examples: <em>logistic regression, kNN, decision trees, random forests, SVMs, neural networks</em>.</li>
+  <li><strong>Generative</strong> models learn the joint P(x, y) — typically by modelling P(x | y) and P(y) — then derive P(y | x) via Bayes. They can also generate synthetic data and naturally handle missing features. Examples: <em>Naive Bayes, Gaussian Discriminant Analysis (LDA / QDA), Gaussian Mixture Models (GMM), Hidden Markov Models (HMM)</em>.</li>
+</ul>
+<p>Rule of thumb: discriminative usually wins on pure prediction accuracy with enough data; generative wins when data is limited, you need to handle missingness, or you want to generate samples.</p>
 <h3>Common mistakes to avoid</h3>
 <ul>
   <li>Forgetting to scale features for distance-based methods</li>
@@ -2243,6 +2388,11 @@ const phase5: Omit<Day, "questions">[] = [
 </table>
 <h3>Output</h3>
 <p>End the day with a written list of 5–10 specific topics to drill over the next two days.</p>
+<div class="extension-banner"><strong>Extension section — not in the official 2026 syllabus.</strong> NFL is a conceptual ML-theory result, not part of the listed exam topics. One-paragraph awareness is enough; don't go deeper.</div>
+<h3>No Free Lunch (NFL) theorem — the meta-claim worth knowing</h3>
+<p>Wolpert &amp; Macready (1997): <strong>averaged over all possible problems</strong>, every learning algorithm performs equally well (or equally badly). There is no universally best algorithm.</p>
+<p>The practical takeaway is not "all algorithms are equal in real life" — they aren't, because real problems aren't uniformly distributed over the space of all possible problems. The takeaway is: <em>algorithm choice must be informed by problem structure (inductive bias)</em>. A model that does well on smooth, low-dimensional data will do badly on adversarial / random-label data, and vice-versa.</p>
+<p>Exam-style claim: "No Free Lunch says no single algorithm outperforms all others on every problem." TRUE.</p>
 `,
     formulas: [
       F("Review template", "Wrong? → re-attempt → root cause → action", "Apply this to every error."),
@@ -2371,6 +2521,18 @@ const phase5: Omit<Day, "questions">[] = [
 </ul>
 <h3>Carry-along version</h3>
 <p>This becomes the only sheet you study on D60 (exam eve) and the only thing you carry mentally into the exam.</p>
+<div class="extension-banner"><strong>Extension section — not in the official 2026 syllabus.</strong> MLE, MAP, consistency, and the Bayesian framework aren't listed in the syllabus and don't appear on the official sample. They're foundational to understanding why OLS / logistic regression / Bayes show up as they do, so know the headline definitions; don't drill computations.</div>
+<h3>Estimator vocabulary — definitions to add to the sheet</h3>
+<p>The Mock-2 quiz drills three concepts that haven't appeared earlier — write them down once and never lose them:</p>
+<ul>
+  <li><strong>Consistency.</strong> An estimator θ̂_n of a parameter θ is consistent iff θ̂_n →^P θ as n → ∞ (converges in probability). Practical reading: with enough data, the estimator pins down the true value. Sample mean is consistent for μ; sample variance with denominator (n−1) is consistent for σ².</li>
+  <li><strong>Maximum Likelihood Estimation (MLE).</strong> Pick the parameter that makes the observed data most probable:
+    <div class="formula-block">θ̂_MLE = arg max_θ L(θ; data) = arg max_θ Σᵢ log p(xᵢ ; θ)</div>
+    Working with log-likelihood turns the product into a sum and lets you differentiate cleanly. Example: for an Exponential(λ) sample x₁,…,xₙ, the log-likelihood is n·log λ − λ·Σxᵢ. Set derivative to 0 → λ̂_MLE = 1 / x̄ (reciprocal of the sample mean).</li>
+  <li><strong>Bayesian posterior &amp; MAP.</strong> Bayes' theorem in parameter form:
+    <div class="formula-block">p(θ | data) = p(data | θ) · p(θ) / p(data)  ∝  likelihood × prior</div>
+    The MAP estimator picks the mode of the posterior: θ̂_MAP = arg max_θ p(data | θ) · p(θ). Under a <em>uniform prior</em>, MAP = MLE (the prior contributes a constant). Under a Gaussian prior on weights, MAP for linear regression is exactly <em>ridge regression</em>; under a Laplace prior it's <em>Lasso</em>.</li>
+</ul>
 `,
     formulas: [
       F("Master sheet", "One A4 page, 5 sections", "If you can't write it from memory, you can't use it on exam day."),
@@ -2439,6 +2601,17 @@ const phase5: Omit<Day, "questions">[] = [
   <li>(AB)⁻¹ = B⁻¹A⁻¹ (not A⁻¹B⁻¹)</li>
   <li>tr(AB) = tr(BA) — even when AB ≠ BA</li>
 </ul>
+<div class="extension-banner"><strong>Extension section — PCA is not in the official 2026 syllabus.</strong> But it directly uses eigenvalue decomposition (which IS in syllabus, Day 23–24), so this paragraph is the kind of "applied" question IITM has been known to slip in. Read the one paragraph; don't go deeper.</div>
+<h3>PCA in one paragraph (referenced in today's quiz)</h3>
+<p>Principal Component Analysis reduces a d-dimensional dataset to k &lt; d dimensions while preserving as much variance as possible.</p>
+<ol>
+  <li>Centre the data (subtract column means).</li>
+  <li>Compute the covariance matrix Σ = (1/(n−1)) XᵀX (X is the centred data matrix).</li>
+  <li>Eigendecompose Σ. Sort eigenvalues λ₁ ≥ λ₂ ≥ … in descending order; eigenvectors are the principal components.</li>
+  <li>Project the data onto the top-k eigenvectors: Z = X · V_k.</li>
+</ol>
+<p><strong>Exam-style fact:</strong> the fraction of variance retained by the first k components is (λ₁ + … + λₖ) / (λ₁ + … + λ_d). PCA projects onto the largest-eigenvalue directions of the covariance matrix.</p>
+<p>Equivalent SVD view (Day 25): X = UΣVᵀ, columns of V are the principal components, singular values squared = scaled eigenvalues of XᵀX.</p>
 <h3>Drill format</h3>
 <p>30 problems, 90 seconds each, topic = Linear Algebra. Track which sub-areas (eigen, det, rank) slow you down most.</p>
 `,
@@ -2479,6 +2652,21 @@ const phase5: Omit<Day, "questions">[] = [
   <li>Always confirm: standardised features?</li>
   <li>Ties? Distance-weighted vote or nearest of the tied points</li>
   <li>k = 1 may overfit; k = n shrinks to majority class</li>
+</ul>
+<div class="extension-banner"><strong>Extension section — Decision trees, Random Forests, and Naive Bayes are NOT in the official 2026 syllabus.</strong> They also don't appear on the official sample paper. Included as defensive coverage in case IITM drifts; read the headline facts so the vocabulary is familiar, but skip the depth if pressed for time.</div>
+<h3>Tree-based &amp; Bayes models (today's quiz introduces these)</h3>
+<p>These three appear on IITM mocks but aren't in Days 36–49. Learn the headline facts now:</p>
+<ul>
+  <li><strong>Decision tree.</strong> Recursively split the feature space on one feature at a time to make resulting nodes purer. For classification, common <em>split criteria</em> are:
+    <ul>
+      <li><em>Gini impurity</em>: 1 − Σ pᵢ². Zero when a node is all one class.</li>
+      <li><em>Entropy</em>: −Σ pᵢ log pᵢ. Information-gain split picks the feature that maximises (parent entropy − weighted children entropy).</li>
+    </ul>
+    Pros: interpretable, handles mixed feature types, no scaling. Cons: high variance — small data changes can flip splits ⇒ unstable trees.</li>
+  <li><strong>Random forest.</strong> An ensemble of decision trees with two randomisation tricks: (1) <em>bagging</em> — each tree trains on a bootstrap sample of the rows; (2) <em>random feature subsets</em> — at each split, only a random √p or log₂ p of the features are considered. Averaging many decorrelated trees <strong>reduces variance</strong> dramatically without raising bias. Predictions: majority vote (classification) or mean (regression).</li>
+  <li><strong>Naive Bayes.</strong> Apply Bayes' rule and the strong "naive" assumption that features are conditionally independent given the class:
+    <div class="formula-block">P(y | x₁, …, x_p) ∝ P(y) · ∏ⱼ P(xⱼ | y)</div>
+    Variants by feature type: Gaussian (continuous features, fit per-class mean &amp; variance), Multinomial (text / counts), Bernoulli (binary). Surprisingly strong baseline despite the independence assumption being usually false.</li>
 </ul>
 <h3>Drill format</h3>
 <p>30 problems, ML filter. The objective: complete the easy 70% in 25 minutes, then attack the 30% harder ones in 20 minutes.</p>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { allQuestions } from "../data/questions";
+import { allQuestions, officialSample2026 } from "../data/questions";
 import { useProgress } from "../store/progressStore";
 import {
   SUBJECT_LABELS,
@@ -10,23 +10,29 @@ import {
 } from "../data/types";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
-type Variant = "50" | "100" | "mini";
+type Variant = "50" | "100" | "mini" | "official";
 
 const VARIANT_INFO: Record<
   Variant,
   { label: string; questions: number; minutes: number; description: string }
 > = {
-  "50": {
-    label: "50-mark paper",
-    questions: 25,
+  official: {
+    label: "Official 2026 paper",
+    questions: 40,
     minutes: 120,
-    description: "Half-length practice paper — 2 hours, 25 questions.",
+    description: "The real IITM CODE AI sample paper, all 40 questions in original order. 2 hours.",
   },
   "100": {
     label: "100-mark paper",
     questions: 50,
     minutes: 120,
     description: "Full exam simulation — 2 hours, 50 questions.",
+  },
+  "50": {
+    label: "50-mark paper",
+    questions: 25,
+    minutes: 120,
+    description: "Half-length practice paper — 2 hours, 25 questions.",
   },
   mini: {
     label: "Mini-mock (M key)",
@@ -120,7 +126,10 @@ export default function MockTest() {
 
   function startMock(v: Variant) {
     const n = VARIANT_INFO[v].questions;
-    const qs = drawWeighted(n, topicFilter || undefined);
+    const qs =
+      v === "official"
+        ? [...officialSample2026]
+        : drawWeighted(n, topicFilter || undefined);
     setVariant(v);
     setQuestions(qs);
     setAnswers({});
@@ -182,7 +191,7 @@ export default function MockTest() {
       date: new Date().toISOString().slice(0, 10),
       score,
       total: questions.length,
-      variant: variant === "mini" ? "50" : variant,
+      variant: variant === "mini" ? "50" : variant === "official" ? "100" : variant,
     });
   }
 
@@ -202,7 +211,7 @@ export default function MockTest() {
         <div className="card">
           <h1 className="text-2xl font-bold">Mock Tests</h1>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            Practise under timed exam conditions. Questions are weighted by exam topic proportions: Stats 38%, LA 27%, Opt 15%, ML 20%.
+            Practise under timed exam conditions. Weights are calibrated against the official IITM 2026 sample paper: Stats 40%, LA 35%, ML 22.5%, Opt 2.5%. Pick <em>Official 2026 paper</em> for the real 40-question sample in original order.
           </p>
         </div>
 
@@ -226,7 +235,7 @@ export default function MockTest() {
           </select>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {(Object.keys(VARIANT_INFO) as Variant[]).map((v) => (
             <button
               key={v}
